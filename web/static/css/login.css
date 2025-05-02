@@ -1,0 +1,87 @@
+/* Add your existing styles here */
+
+/* General Styles */
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Form container adjustments */
+.auth-container {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+}
+
+.auth-container .row {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.col {
+    width: 50%;
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 28rem;
+    padding: 2rem;
+}
+
+.form {
+    padding: 1rem;
+    background-color: var(--white);
+    border-radius: 1.5rem;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    transform: scale(0);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Make sure the scale transitions properly */
+.container.sign-in .form.sign-in,
+.container.sign-up .form.sign-up {
+    transform: scale(1);
+}
+
+/* Sign-up and Sign-in transitions */
+.container.sign-in .text.sign-in,
+.container.sign-in .img.sign-in {
+    transform: translateX(100%);
+}
+.container.sign-up .text.sign-up,
+.container.sign-up .img.sign-up {
+    transform: translateX(-100%);
+}
+
+/* Responsive for smaller devices */
+@media screen and (max-width: 768px) {
+    .col {
+        width: 100%;
+    }
+
+    .text h2 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Apply adjustments for smaller screen sizes */
+@media only screen and (max-width: 425px) {
+    .auth-container::before,
+    .auth-container.sign-in::before,
+    .auth-container.sign-up::before {
+        height: 100vh;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 0;
+        z-index: 0;
+        transform: none;
+        right: 0;
+    }
+}

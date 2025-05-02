@@ -1,0 +1,96 @@
+/* Custom styles */
+.hero {
+    background: url('https://source.unsplash.com/1600x900/?nature') no-repeat center center/cover;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+.hero-content {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.footer {
+    background: #000000;
+    color: rgb(255, 254, 254);
+    text-align: center;
+    padding: 10px;
+}
+
+
+/* Logo Styling */
+.navbar-brand img {
+    max-width: 50px; /* Adjust logo size */
+    height: auto;
+    border: 2px solid #fff; /* Border around logo */
+    border-radius: 10px; /* Rounded corners */
+    padding: 5px; /* Space around logo */
+    margin-right: 10px; /* Space between logo and company name */
+}
+/* Company Name Styling */
+.company-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;   
+    text-decoration: none;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+/*navbar drak mode*/
+body {
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+ 
+  .object-fit-cover {
+    object-fit: cover;
+  }
+
+  .navbar-brand img {
+    height: 40px;
+    width: auto;
+    margin-right: 10px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--bs-secondary-bg, #000000); /* Default fallback color */
+    color: var(--bs-body-color, #ffffff); /* Default fallback color */
+  }
+
+  .dark-toggle {
+    cursor: pointer;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.container {
+    flex: 1;
+}
+
+body {
+  background: linear-gradient(-45deg, #e3f2fd, #bbdefb, #90caf9, #64b5f6);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0% 50%;
+  }
+}

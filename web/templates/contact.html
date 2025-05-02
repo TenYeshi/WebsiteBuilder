@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="../static/css/index.css">
+        <link rel="stylesheet" href="../static/css/contact.css">
+        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- AOS Animation CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        
+    </head>
+    <body>
+        <!-- Header -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <!-- Logo and Company Name -->
+                
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="../static/img/logo.png" alt="logo">
+                    <span class="company-name">Company Name</span>
+                </a> 
+                
+                <!-- Mobile To  ggle Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Navbar Links -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.html">Contact</a>
+                        </li>
+                    </ul>
+                    <!-- Button on Navbar -->
+                    
+                    <div class="d-flex align-items-center ms-3">
+                        <a href="./login.html" class="btn btn-outline-light me-2">Sign In</a>
+                        <!-- <a href="#" class="btn btn-primary">Sign Up</a> -->
+                        <button class="btn btn-secondary ms-3 dark-toggle">🌓</button>
+                    </div>
+                    <!-- <a href="#" class="btn btn-primary ms-3">Sign Up</a> -->
+                </div>
+            </div>
+        </nav>
+        
+        
+        <!-- Main Content -->
+        <main>
+            <div class="container">
+                <h2>Contact Us</h2>
+                <p>We'd love to hear from you! Please fill out the form below to get in touch with us.</p>
+                
+                <form action="/submit-contact" method="POST" class="contact-form">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+                    
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>  
+        </main>
+        <!-- Top Wave -->
+        <div class="svg-wave-top">
+            <svg viewBox="0 0 1440 150" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#e3f2fd" d="M0,96L60,85.3C120,75,240,53,360,58.7C480,64,600,96,720,117.3C840,139,960,149,1080,144C1200,139,1320,117,1380,106.7L1440,96V0H0Z"></path>
+            </svg>
+        </div>
+        <!-- Bottom Wave -->
+        <div class="svg-wave-bottom">
+            <svg viewBox="0 0 1440 150" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#e3f2fd" d="M0,64L60,80C120,96,240,128,360,128C480,128,600,96,720,85.3C840,75,960,85,1080,80C1200,75,1320,53,1380,42.7L1440,32V150H0Z"></path>
+            </svg>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer mt-auto py-3 bg-dark text-white text-center">
+            <div class="container">
+                <p class="mb-0">&copy; 2025 My Website. All Rights Reserved.</p>
+            </div>
+        </footer>
+        <!-- Bootstrap JS Bundle with Popper --> 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- AOS Animation JS -->
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+        <!-- Custom JS -->
+        <script src="../static/js/index.js"></script>
+    </body>
+</html>
