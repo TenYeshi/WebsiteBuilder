@@ -1,5 +1,7 @@
 modules = ["python-3.11"]
+
 [workflows]
+runButton = "Flask"
 
 [[workflows.workflow]]
 name = "hi"
@@ -9,3 +11,15 @@ author = 42189818
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 main.py"
+
+[[workflows.workflow]]
+name = "Flask"
+author = 42189818
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd web && python app.py"
+
+[deployment]
+run = ["sh", "-c", "cd web && python app.py"]
