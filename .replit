@@ -1,0 +1,11 @@
+modules = ["python-3.11"]
+[workflows]
+
+[[workflows.workflow]]
+name = "hi"
+mode = "sequential"
+author = 42189818
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 main.py"
