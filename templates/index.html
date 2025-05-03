@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Ten Yeshi | Portfolio{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero bg-dark text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-4 fw-bold">Ten Yeshi</h1>
+                <p class="lead">Software Developer & Designer</p>
+                <p>Creating innovative solutions with clean, efficient code</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('about') }}" class="btn btn-primary btn-lg me-3">Learn More</a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-outline-light btn-lg">Get in Touch</a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-4 mt-lg-0" data-aos="fade-left">
+                <!-- Carousel -->
+                <div id="imageCarousel" class="carousel slide carousel-fade rounded shadow"
+                    data-bs-ride="carousel"
+                    data-bs-interval="5000"
+                    style="height: 400px; overflow: hidden;">
+                    
+                    <!-- Indicators -->
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    
+                    <!-- Images -->
+                    <div class="carousel-inner h-100 rounded">
+                        <div class="carousel-item active h-100">
+                            <div class="d-flex align-items-center justify-content-center h-100 bg-primary">
+                                <i class="bi bi-code-slash text-white" style="font-size: 5rem;"></i>
+                            </div>
+                        </div>
+                        <div class="carousel-item h-100">
+                            <div class="d-flex align-items-center justify-content-center h-100 bg-success">
+                                <i class="bi bi-laptop text-white" style="font-size: 5rem;"></i>
+                            </div>
+                        </div>
+                        <div class="carousel-item h-100">
+                            <div class="d-flex align-items-center justify-content-center h-100 bg-info">
+                                <i class="bi bi-brush text-white" style="font-size: 5rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center my-5">
+        <h2 class="mb-5" data-aos="fade-up">My Expertise</h2>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card p-4 shadow h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-code-square"></i>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Creating responsive and interactive web applications using modern technologies.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card p-4 shadow h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <h3>Mobile Apps</h3>
+                    <p>Developing cross-platform mobile applications with a seamless user experience.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card p-4 shadow h-100">
+                    <div class="feature-icon">
+                        <i class="bi bi-palette"></i>
+                    </div>
+                    <h3>UI/UX Design</h3>
+                    <p>Creating intuitive and visually appealing user interfaces for digital products.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">Recent Projects</h2>
+        <div class="row">
+            {% if projects %}
+                {% for project in projects %}
+                    <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                        <div class="card project-card shadow h-100">
+                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="bi bi-image text-secondary" style="font-size: 3rem;"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ project.title }}</h5>
+                                <p class="card-text">{{ project.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>No projects available yet. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white text-center">
+    <div class="container" data-aos="fade-up">
+        <h2 class="mb-4">Let's Work Together</h2>
+        <p class="lead mb-4">I'm always open to discussing new projects, creative ideas or opportunities to be part of your vision.</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg">Get in Touch</a>
+    </div>
+</section>
+{% endblock %}

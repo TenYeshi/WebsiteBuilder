@@ -1,7 +1,7 @@
 modules = ["python-3.11"]
 
 [workflows]
-runButton = "Flask"
+runButton = "Project"
 
 [[workflows.workflow]]
 name = "hi"
@@ -21,10 +21,31 @@ mode = "sequential"
 task = "shell.exec"
 args = "cd web && python app.py"
 
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "gunicorn --bind 0.0.0.0:5000 --reuse-port --reload main:app"
+waitForPort = 5000
+
 [deployment]
-run = ["sh", "-c", "cd web && python app.py"]
+run = ["gunicorn", "--bind", "0.0.0.0:5000", "main:app"]
+deploymentTarget = "autoscale"
 
 [nix]
+channel = "stable-24_05"
+packages = ["openssl", "postgresql"]
 
 [[ports]]
 localPort = 5000

@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}About Me | Ten Yeshi{% endblock %}
+
+{% block content %}
+<!-- About Hero -->
+<section class="hero bg-dark text-white py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 data-aos="fade-up">About Me</h1>
+                <p class="lead" data-aos="fade-up" data-aos-delay="100">Learn more about my background, skills, and experience</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Content -->
+<section class="about-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                <div class="d-flex align-items-center justify-content-center bg-light p-4 rounded shadow-sm" style="height: 400px;">
+                    <i class="bi bi-person-circle text-primary" style="font-size: 8rem;"></i>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <h2>Ten Yeshi</h2>
+                <p class="text-muted">Software Developer & Designer</p>
+                <p>I am a passionate software developer with expertise in creating responsive web applications and user interfaces. My journey in technology began several years ago when I discovered my love for coding and problem-solving.</p>
+                <p>With a strong foundation in both frontend and backend technologies, I strive to create applications that are not only functional but also provide an exceptional user experience.</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary">Contact Me</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">My Skills</h2>
+        <div class="row">
+            <!-- Technical Skills -->
+            <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">Technical Skills</h3>
+                        <ul class="skills-list mt-4">
+                            <li>HTML5/CSS3</li>
+                            <li>JavaScript</li>
+                            <li>Python</li>
+                            <li>Flask</li>
+                            <li>React</li>
+                            <li>Node.js</li>
+                            <li>SQL</li>
+                            <li>MongoDB</li>
+                            <li>Git</li>
+                            <li>Responsive Design</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Soft Skills -->
+            <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">Soft Skills</h3>
+                        <ul class="skills-list mt-4">
+                            <li>Problem Solving</li>
+                            <li>Team Collaboration</li>
+                            <li>Communication</li>
+                            <li>Project Management</li>
+                            <li>Time Management</li>
+                            <li>Adaptability</li>
+                            <li>Critical Thinking</li>
+                            <li>Attention to Detail</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Experience -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">Experience</h2>
+        <div class="timeline">
+            <!-- Experience Item 1 -->
+            <div class="card mb-4 shadow" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h3>Senior Developer</h3>
+                        <p class="text-muted">2020 - Present</p>
+                    </div>
+                    <h4>Tech Innovations Inc.</h4>
+                    <p>Leading the development of responsive web applications and providing mentorship to junior developers. Implementing best practices and maintaining high-quality code standards.</p>
+                </div>
+            </div>
+            
+            <!-- Experience Item 2 -->
+            <div class="card mb-4 shadow" data-aos="fade-up" data-aos-delay="200">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h3>Web Developer</h3>
+                        <p class="text-muted">2017 - 2020</p>
+                    </div>
+                    <h4>Digital Solutions LLC</h4>
+                    <p>Developed and maintained client websites and web applications. Collaborated with designers to implement responsive, user-friendly interfaces.</p>
+                </div>
+            </div>
+            
+            <!-- Experience Item 3 -->
+            <div class="card mb-4 shadow" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h3>Junior Developer</h3>
+                        <p class="text-muted">2015 - 2017</p>
+                    </div>
+                    <h4>WebTech Co.</h4>
+                    <p>Assisted in the development of company projects, focusing primarily on frontend implementation and bug fixing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Education -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">Education</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mb-4 shadow" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h3>Bachelor of Science in Computer Science</h3>
+                            <p class="text-muted">2012 - 2015</p>
+                        </div>
+                        <h4>University of Technology</h4>
+                        <p>Graduated with honors. Specialized in software development and data structures.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5 bg-primary text-white text-center">
+    <div class="container" data-aos="fade-up">
+        <h2 class="mb-4">Ready to Start a Project?</h2>
+        <p class="lead mb-4">Let's discuss how I can help bring your ideas to life.</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg">Contact Me</a>
+    </div>
+</section>
+{% endblock %}

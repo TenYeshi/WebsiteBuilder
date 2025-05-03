@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In | Ten Yeshi{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card login-form shadow" data-aos="fade-up">
+                    <div class="card-body p-4">
+                        <h2 class="text-center mb-4">Sign In</h2>
+                        
+                        <form method="POST" action="{{ url_for('login') }}">
+                            {{ form.csrf_token }}
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.username.id }}" class="form-label">{{ form.username.label }}</label>
+                                {{ form.username(class="form-control", placeholder="Enter your username") }}
+                                {% if form.username.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.username.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.password.id }}" class="form-label">{{ form.password.label }}</label>
+                                {{ form.password(class="form-control", placeholder="Enter your password") }}
+                                {% if form.password.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.password.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                {{ form.remember(class="form-check-input") }}
+                                <label class="form-check-label" for="{{ form.remember.id }}">{{ form.remember.label }}</label>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                {{ form.submit(class="btn btn-primary") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
