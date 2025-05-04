@@ -219,8 +219,9 @@ def submit_application():
         db.session.add(new_application)
         db.session.commit()
         
-        flash('Your application has been submitted successfully!', 'success')
-        return redirect(url_for('home'))
+        flash('Your application has been submitted successfully! Application ID: ' + str(new_application.id), 'success')
+        # Redirect to the success page with the application ID
+        return redirect(url_for('view_application', application_id=new_application.id))
     
     return render_template('submit_application.html', form=form, existing_applications=existing_applications)
 

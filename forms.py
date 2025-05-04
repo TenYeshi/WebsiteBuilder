@@ -31,7 +31,7 @@ class ApplicationForm(FlaskForm):
     address = TextAreaField('Address', validators=[Length(max=200)])
     phone_number = StringField('Phone Number', validators=[Length(max=20)])
     content = TextAreaField('Additional Comments', validators=[Length(min=0, max=500)])
-    submit = SubmitField('Submit Application')
+    submit = SubmitField('APPLY NOW')
 
 class ApplicationFeedbackForm(FlaskForm):
     feedback = TextAreaField('Feedback', validators=[DataRequired(), Length(min=5, max=500)])
