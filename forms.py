@@ -24,11 +24,6 @@ class ProjectForm(FlaskForm):
 class ApplicationForm(FlaskForm):
     applicant_name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=100)])
     email = StringField('Email Address', validators=[DataRequired(), Email()])
-    application_type = SelectField('Application Type', 
-                                 choices=[('apply', 'Apply Application'), 
-                                         ('id_card', 'Apply ID Card'),
-                                         ('custom', 'Custom Application')],
-                                 validators=[DataRequired()])
     content = TextAreaField('Application Content', validators=[DataRequired(), Length(min=10)])
     submit = SubmitField('Submit Application')
 

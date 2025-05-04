@@ -27,7 +27,6 @@ class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     applicant_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)
-    application_type = db.Column(db.String(50), nullable=False)  # 'apply', 'id_card', 'custom'
     content = db.Column(db.Text, nullable=False)  # Store document content
     status = db.Column(db.String(20), default='pending')  # 'pending', 'approved', 'rejected'
     feedback = db.Column(db.Text, nullable=True)

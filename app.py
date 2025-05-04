@@ -171,18 +171,11 @@ def word_processor():
 def submit_application():
     form = ApplicationForm()
     
-    # Pre-select application type if provided in query parameter
-    app_type = request.args.get('type')
-    if app_type and request.method == 'GET':
-        if app_type in ['apply', 'id_card', 'custom']:
-            form.application_type.data = app_type
-    
     if form.validate_on_submit():
         # Create new application
         new_application = Application(
             applicant_name=form.applicant_name.data,
             email=form.email.data,
-            application_type=form.application_type.data,
             content=form.content.data,
             status='pending'
         )
