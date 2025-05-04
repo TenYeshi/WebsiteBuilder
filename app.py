@@ -99,6 +99,41 @@ def contact():
     
     return render_template('contact.html')
 
+# Welcome Message Generator
+@app.route('/welcome-message', methods=['GET', 'POST'])
+def welcome_message():
+    form = WelcomeMessageForm()
+    welcome_text = None
+    
+    if form.validate_on_submit():
+        # Gather visitor information
+        visitor_info = {
+            'name': form.name.data or 'there',
+            'time_of_day': form.time_of_day.data or 'today',
+            'location': form.location.data or ''
+        }
+        
+        # Generate personalized welcome message
+        welcome_text = generate_welcome_message(visitor_info)
+        
+    return render_template('welcome_message.html', form=form, welcome_text=welcome_text)
+
+# AJAX endpoint for welcome message generation
+@app.route('/api/generate-welcome', methods=['POST'])
+def api_generate_welcome():
+    data = request.json
+    visitor_info = {
+        'name': data.get('name', 'there'),
+        'time_of_day': data.get('time_of_day', 'today'),
+        'location': data.get('location', '')
+    }
+    
+    try:
+        welcome_text = generate_welcome_message(visitor_info)
+        return jsonify({'status': 'success', 'message': welcome_text})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 # Error handler for 404 errors
 @app.errorhandler(404)
 def page_not_found(e):
