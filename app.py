@@ -161,6 +161,11 @@ def api_generate_welcome():
             'error': str(e)
         })
 
+# Word Processor Application
+@app.route('/word-processor')
+def word_processor():
+    return render_template('word_processor/index.html')
+
 # Error handler for 404 errors
 @app.errorhandler(404)
 def page_not_found(e):
