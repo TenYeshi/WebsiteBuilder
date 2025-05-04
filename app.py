@@ -176,6 +176,12 @@ def submit_application():
         new_application = Application(
             applicant_name=form.applicant_name.data,
             email=form.email.data,
+            father_name=form.father_name.data,
+            roll_number=form.roll_number.data,
+            class_name=form.class_name.data,
+            date_of_birth=form.date_of_birth.data,
+            address=form.address.data,
+            phone_number=form.phone_number.data,
             content=form.content.data,
             status='pending'
         )

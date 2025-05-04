@@ -24,7 +24,13 @@ class ProjectForm(FlaskForm):
 class ApplicationForm(FlaskForm):
     applicant_name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=100)])
     email = StringField('Email Address', validators=[DataRequired(), Email()])
-    content = TextAreaField('Application Content', validators=[DataRequired(), Length(min=10)])
+    father_name = StringField('Father\'s Name', validators=[Length(min=2, max=100)])
+    roll_number = StringField('Roll Number', validators=[Length(max=20)])
+    class_name = StringField('Class', validators=[Length(max=50)])
+    date_of_birth = StringField('Date of Birth (YYYY-MM-DD)', validators=[Optional(), Length(max=10)])
+    address = TextAreaField('Address', validators=[Length(max=200)])
+    phone_number = StringField('Phone Number', validators=[Length(max=20)])
+    content = TextAreaField('Additional Comments', validators=[Length(min=0, max=500)])
     submit = SubmitField('Submit Application')
 
 class ApplicationFeedbackForm(FlaskForm):

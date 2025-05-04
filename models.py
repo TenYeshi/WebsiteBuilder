@@ -27,7 +27,13 @@ class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     applicant_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False)
-    content = db.Column(db.Text, nullable=False)  # Store document content
+    father_name = db.Column(db.String(100), nullable=True)
+    roll_number = db.Column(db.String(20), nullable=True)
+    class_name = db.Column(db.String(50), nullable=True)
+    date_of_birth = db.Column(db.String(10), nullable=True)
+    address = db.Column(db.Text, nullable=True)
+    phone_number = db.Column(db.String(20), nullable=True)
+    content = db.Column(db.Text, nullable=False)  # Additional details or comments
     status = db.Column(db.String(20), default='pending')  # 'pending', 'approved', 'rejected'
     feedback = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
