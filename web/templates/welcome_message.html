@@ -132,6 +132,14 @@
                         
                         {% if welcome_text %}
                         <div class="mt-5">
+                            {% if api_error %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                {{ api_error }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endif %}
+                            
                             <h4>Your Personalized Welcome Message:</h4>
                             <div class="welcome-message" id="welcomeMessage">
                                 {{ welcome_text }}

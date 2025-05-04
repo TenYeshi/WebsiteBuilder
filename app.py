@@ -104,6 +104,7 @@ def contact():
 def welcome_message():
     form = WelcomeMessageForm()
     welcome_text = None
+    api_error = None
     
     if form.validate_on_submit():
         # Gather visitor information
@@ -113,10 +114,20 @@ def welcome_message():
             'location': form.location.data or ''
         }
         
-        # Generate personalized welcome message
-        welcome_text = generate_welcome_message(visitor_info)
+        try:
+            # Generate personalized welcome message
+            welcome_text = generate_welcome_message(visitor_info)
+            
+            # Check if we're using the API key
+            if not os.environ.get('OPENAI_API_KEY'):
+                api_error = "OpenAI API key is not configured. Using fallback messaging."
+                
+        except Exception as e:
+            app.logger.error(f"Error in welcome message generation: {e}")
+            welcome_text = generate_welcome_message(visitor_info)  # This will use fallback
+            api_error = "There was an issue with the OpenAI API. Using fallback message generation."
         
-    return render_template('welcome_message.html', form=form, welcome_text=welcome_text)
+    return render_template('welcome_message.html', form=form, welcome_text=welcome_text, api_error=api_error)
 
 # AJAX endpoint for welcome message generation
 @app.route('/api/generate-welcome', methods=['POST'])
@@ -130,9 +141,25 @@ def api_generate_welcome():
     
     try:
         welcome_text = generate_welcome_message(visitor_info)
+        
+        # Check if API key is missing
+        if not os.environ.get('OPENAI_API_KEY'):
+            return jsonify({
+                'status': 'partial_success',
+                'message': welcome_text,
+                'note': "OpenAI API key is not configured. Using fallback messaging."
+            })
+            
         return jsonify({'status': 'success', 'message': welcome_text})
     except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+        app.logger.error(f"API welcome message error: {e}")
+        # Still generate a fallback message
+        fallback_text = generate_welcome_message(visitor_info)  # Will use fallback
+        return jsonify({
+            'status': 'error', 
+            'message': fallback_text,
+            'error': str(e)
+        })
 
 # Error handler for 404 errors
 @app.errorhandler(404)

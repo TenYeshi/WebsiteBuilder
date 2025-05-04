@@ -1,6 +1,11 @@
 import os
 import json
+import logging
 from openai import OpenAI
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize the OpenAI client
 # The newest OpenAI model is "gpt-4o" which was released May 13, 2024.
@@ -26,6 +31,20 @@ def generate_welcome_message(visitor_info=None):
     time_of_day = visitor_info.get('time_of_day', 'today')
     location = visitor_info.get('location', '')
     
+    # Create fallback messages based on the visitor info
+    if name and name.lower() != 'there' and location and time_of_day and time_of_day.lower() != 'today':
+        fallback_message = f"Good {time_of_day}, {name} from {location}! Welcome to Ten Yeshi's portfolio website. Feel free to explore my projects and get in touch."
+    elif name and name.lower() != 'there' and time_of_day and time_of_day.lower() != 'today':
+        fallback_message = f"Good {time_of_day}, {name}! Welcome to Ten Yeshi's portfolio website. I invite you to explore my work and projects."
+    elif name and name.lower() != 'there' and location:
+        fallback_message = f"Welcome to my portfolio website, {name} from {location}! I hope you enjoy browsing through my projects and achievements."
+    elif name and name.lower() != 'there':
+        fallback_message = f"Welcome, {name}! Thanks for visiting Ten Yeshi's portfolio website. Please take a look around at my projects."
+    elif location:
+        fallback_message = f"Hello visitor from {location}! Welcome to Ten Yeshi's portfolio website. I hope you find my projects interesting."
+    else:
+        fallback_message = "Welcome to Ten Yeshi's portfolio website! Feel free to explore my projects and get in touch."
+    
     # Create a prompt for the OpenAI API
     prompt = f"""
     Create a friendly, warm welcome message for a visitor to Ten Yeshi's portfolio website.
@@ -47,6 +66,11 @@ def generate_welcome_message(visitor_info=None):
     """
     
     try:
+        # Check if API key is provided
+        if not os.environ.get('OPENAI_API_KEY'):
+            logger.warning("No OpenAI API key provided. Using fallback message.")
+            return fallback_message
+            
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=[
@@ -60,6 +84,17 @@ def generate_welcome_message(visitor_info=None):
         # Return the generated welcome message
         return response.choices[0].message.content.strip()
     except Exception as e:
-        # Fallback message in case of any errors
-        print(f"Error generating welcome message: {e}")
-        return f"Welcome to Ten Yeshi's portfolio website! Feel free to explore my projects and get in touch."
+        # Log the specific error
+        logger.error(f"Error generating welcome message: {e}")
+        
+        # Check for specific error types
+        error_str = str(e)
+        if "insufficient_quota" in error_str:
+            logger.warning("OpenAI API quota exceeded. Using fallback message.")
+        elif "invalid_api_key" in error_str:
+            logger.warning("Invalid OpenAI API key. Using fallback message.")
+        elif "rate_limit_exceeded" in error_str:
+            logger.warning("OpenAI API rate limit exceeded. Using fallback message.")
+            
+        # Return fallback message
+        return fallback_message
