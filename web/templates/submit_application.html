@@ -39,18 +39,6 @@
                         </div>
                         
                         <div class="mb-3">
-                            {{ form.application_type.label(class="form-label") }}
-                            {{ form.application_type(class="form-select") }}
-                            {% if form.application_type.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.application_type.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
                             {{ form.content.label(class="form-label") }}
                             {{ form.content(class="form-control", rows=10) }}
                             {% if form.content.errors %}
