@@ -45,7 +45,7 @@ deploymentTarget = "autoscale"
 
 [nix]
 channel = "stable-24_05"
-packages = ["openssl", "postgresql"]
+packages = ["openssl", "postgresql", "zip"]
 
 [[ports]]
 localPort = 5000
