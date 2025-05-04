@@ -225,19 +225,40 @@ def submit_application():
     
     return render_template('submit_application.html', form=form, existing_applications=existing_applications)
 
-# Admin login
+# Application status check
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     
     if form.validate_on_submit():
-        # For simplicity, we'll use a hardcoded username/password
-        # In a real application, you would authenticate against a user database
-        if form.username.data == 'admin' and form.password.data == 'admin123':
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
-        else:
-            flash('Invalid username or password', 'danger')
+        # Try to find application by ID or roll number
+        application_id_or_roll = form.username.data.strip() if form.username.data else ""
+        email = form.password.data.strip() if form.password.data else ""
+        
+        # First check if it's a numeric application ID
+        application = None
+        try:
+            if application_id_or_roll and application_id_or_roll.isdigit():
+                application = Application.query.filter_by(
+                    id=int(application_id_or_roll),
+                    email=email
+                ).first()
+            
+            # If not found by ID, try roll number
+            if not application:
+                application = Application.query.filter_by(
+                    roll_number=application_id_or_roll,
+                    email=email
+                ).first()
+                
+            if application:
+                flash('Application found! Showing details.', 'success')
+                return redirect(url_for('view_application', application_id=application.id))
+            else:
+                flash('No application found with the provided details. Please check and try again.', 'danger')
+        except Exception as e:
+            app.logger.error(f"Error checking application status: {e}")
+            flash('An error occurred while checking your application. Please try again.', 'danger')
     
     return render_template('login.html', form=form)
 

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Login{% endblock %}
+{% block title %}Check Application Status{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -8,7 +8,7 @@
         <div class="col-md-6 mx-auto">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Admin Login</h4>
+                    <h4 class="mb-0">Check Status of Your Application</h4>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ url_for('login') }}">
@@ -47,6 +47,14 @@
                             {{ form.submit(class="btn btn-primary") }}
                         </div>
                     </form>
+                    
+                    <div class="mt-3 text-center">
+                        <hr>
+                        <small class="text-muted">Are you an administrator?</small>
+                        <div class="mt-2">
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-secondary">Admin Dashboard</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
