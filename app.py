@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from forms import WelcomeMessageForm, ApplicationForm, ApplicationFeedbackForm
+from forms import WelcomeMessageForm, ApplicationForm, ApplicationFeedbackForm, LoginForm, ApplicationSearchForm
 
 # Import our OpenAI helper functions
 from utils.openai_helper import generate_welcome_message
@@ -225,10 +225,25 @@ def submit_application():
     
     return render_template('submit_application.html', form=form, existing_applications=existing_applications)
 
-# Dashboard for application management
+# Admin login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    
+    if form.validate_on_submit():
+        # For simplicity, we'll use a hardcoded username/password
+        # In a real application, you would authenticate against a user database
+        if form.username.data == 'admin' and form.password.data == 'admin123':
+            flash('Login successful!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid username or password', 'danger')
+    
+    return render_template('login.html', form=form)
+
+# Dashboard for application management (requires login)
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    from forms import ApplicationSearchForm
     search_form = ApplicationSearchForm()
     query = None
     
