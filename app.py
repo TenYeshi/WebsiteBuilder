@@ -1,59 +1,61 @@
 import os
-import logging
 from datetime import datetime
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash
 
-# Setup logger
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+app = Flask(__name__, 
+            static_folder='web/static',
+            template_folder='web/templates')
+app.secret_key = os.environ.get("SESSION_SECRET", "tenyeshi-portfolio-key")
 
-# Create Flask app
-app = Flask(__name__)
-app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
-
-# Simple in-memory data storage
+# Sample projects data (in-memory storage)
 projects = [
     {
         'id': 1,
         'title': 'Portfolio Website',
         'description': 'A responsive portfolio website built with Flask and Bootstrap.',
-        'image_url': 'https://via.placeholder.com/800x600?text=Portfolio+Website'
+        'image_url': '/static/img/logo.png'
     },
     {
         'id': 2,
         'title': 'E-commerce Platform',
         'description': 'A full-featured online store with product listings and shopping cart.',
-        'image_url': 'https://via.placeholder.com/800x600?text=E-commerce+Platform'
+        'image_url': '/static/img/logo2.png'
     },
     {
         'id': 3,
         'title': 'Mobile App Design',
         'description': 'UI/UX design for a fitness tracking mobile application.',
-        'image_url': 'https://via.placeholder.com/800x600?text=Mobile+App+Design'
+        'image_url': '/static/img/logo3.png'
     }
 ]
 
+# In-memory message storage
 messages = []
 
-# Routes
+# Home route
 @app.route('/')
 def home():
     return render_template('index.html', projects=projects)
 
-@app.route('/about')
+# Static page routes
+@app.route('/index.html')
+def home_page():
+    return render_template('index.html', projects=projects)
+
+@app.route('/about.html')
 def about():
     return render_template('about.html')
 
-@app.route('/contact', methods=['GET', 'POST'])
+@app.route('/contact.html', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        # Simple form processing without WTForms
         name = request.form.get('name')
         email = request.form.get('email')
-        subject = request.form.get('subject')
+        subject = request.form.get('subject', 'No Subject')
         message_text = request.form.get('message')
         
-        if name and email and subject and message_text:
+        if name and email and message_text:
+            # Store message in our in-memory list
             message = {
                 'id': len(messages) + 1,
                 'name': name,
@@ -64,14 +66,14 @@ def contact():
                 'created_at': datetime.now().strftime('%B %d, %Y')
             }
             messages.append(message)
-            flash('Your message has been sent!', 'success')
+            flash('Your message has been sent successfully!', 'success')
             return redirect(url_for('contact'))
         else:
-            flash('Please fill in all fields', 'danger')
+            flash('Please fill in all required fields', 'danger')
     
     return render_template('contact.html')
 
-# Simple error handler for 404
+# Error handler for 404 errors
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('index.html'), 404

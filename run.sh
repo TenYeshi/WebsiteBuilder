@@ -1,8 +1,7 @@
 #!/bin/bash
-# This script is used to run the Flask application
 
-# Install Flask if needed
-pip install flask --user
+# Kill any existing process on port 5000
+fuser -k 5000/tcp 2>/dev/null
 
-# Run the Flask application 
+# Start the application
 python main.py
