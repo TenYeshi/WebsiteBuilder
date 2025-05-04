@@ -107,20 +107,23 @@
     <div class="row">
         <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
             <div class="card p-3 shadow">
-                <h3>Feature 1</h3>
-                <p>Responsive design with Bootstrap.</p>
+                <h3><a href="{{ url_for('word_processor') }}" class="text-decoration-none">Word Processor</a></h3>
+                <p>A powerful document editor with formatting tools and image handling.</p>
+                <a href="{{ url_for('word_processor') }}" class="btn btn-primary btn-sm">Try it now</a>
             </div>
         </div>
         <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
             <div class="card p-3 shadow">
-                <h3>Feature 2</h3>
-                <p>Easy customization with CSS.</p>
+                <h3><a href="{{ url_for('welcome_message') }}" class="text-decoration-none">Welcome Generator</a></h3>
+                <p>AI-powered personalized welcome messages for visitors.</p>
+                <a href="{{ url_for('welcome_message') }}" class="btn btn-primary btn-sm">Try it now</a>
             </div>
         </div>
         <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
             <div class="card p-3 shadow">
-                <h3>Feature 3</h3>
-                <p>Modern UI components included.</p>
+                <h3><a href="{{ url_for('about') }}" class="text-decoration-none">Portfolio</a></h3>
+                <p>Professional portfolio showcasing Ten Yeshi's projects and skills.</p>
+                <a href="{{ url_for('about') }}" class="btn btn-primary btn-sm">Learn More</a>
             </div>
         </div>
     </div>
