@@ -22,3 +22,17 @@ class Message(db.Model):
 
     def __repr__(self):
         return f'<Message {self.subject}>'
+
+class Application(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    applicant_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    application_type = db.Column(db.String(50), nullable=False)  # 'apply', 'id_card', 'custom'
+    content = db.Column(db.Text, nullable=False)  # Store document content
+    status = db.Column(db.String(20), default='pending')  # 'pending', 'approved', 'rejected'
+    feedback = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Application {self.id} by {self.applicant_name} - {self.status}>'

@@ -21,6 +21,21 @@ class ProjectForm(FlaskForm):
     image_url = StringField('Image URL', validators=[DataRequired(), URL()])
     submit = SubmitField('Add Project')
 
+class ApplicationForm(FlaskForm):
+    applicant_name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=100)])
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+    application_type = SelectField('Application Type', 
+                                 choices=[('apply', 'Apply Application'), 
+                                         ('id_card', 'Apply ID Card'),
+                                         ('custom', 'Custom Application')],
+                                 validators=[DataRequired()])
+    content = TextAreaField('Application Content', validators=[DataRequired(), Length(min=10)])
+    submit = SubmitField('Submit Application')
+
+class ApplicationFeedbackForm(FlaskForm):
+    feedback = TextAreaField('Feedback', validators=[DataRequired(), Length(min=5, max=500)])
+    submit = SubmitField('Submit Feedback')
+
 class WelcomeMessageForm(FlaskForm):
     name = StringField('Your Name', validators=[Optional(), Length(max=64)], 
                       description="Enter your name for a personalized greeting")

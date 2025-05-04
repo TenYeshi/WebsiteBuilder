@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from forms import WelcomeMessageForm
+from forms import WelcomeMessageForm, ApplicationForm, ApplicationFeedbackForm
 
 # Import our OpenAI helper functions
 from utils.openai_helper import generate_welcome_message
@@ -29,7 +29,7 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 db.init_app(app)
 
 # Import models after defining db
-from models import Project, Message
+from models import Project, Message, Application
 
 # Create tables within application context
 with app.app_context():
@@ -165,6 +165,55 @@ def api_generate_welcome():
 @app.route('/word-processor')
 def word_processor():
     return render_template('word_processor/index.html')
+
+# Application submission routes
+@app.route('/submit-application', methods=['GET', 'POST'])
+def submit_application():
+    form = ApplicationForm()
+    
+    if form.validate_on_submit():
+        # Create new application
+        new_application = Application(
+            applicant_name=form.applicant_name.data,
+            email=form.email.data,
+            application_type=form.application_type.data,
+            content=form.content.data,
+            status='pending'
+        )
+        db.session.add(new_application)
+        db.session.commit()
+        
+        flash('Your application has been submitted successfully!', 'success')
+        return redirect(url_for('home'))
+    
+    return render_template('submit_application.html', form=form)
+
+# Dashboard for application management
+@app.route('/dashboard')
+def dashboard():
+    applications = Application.query.order_by(Application.created_at.desc()).all()
+    return render_template('dashboard.html', applications=applications)
+
+# View a single application
+@app.route('/application/<int:application_id>')
+def view_application(application_id):
+    application = Application.query.get_or_404(application_id)
+    return render_template('view_application.html', application=application)
+
+# Update application status (approve or reject)
+@app.route('/application/<int:application_id>/update-status', methods=['POST'])
+def update_application_status(application_id):
+    application = Application.query.get_or_404(application_id)
+    new_status = request.form.get('status')
+    
+    if new_status in ['approved', 'rejected']:
+        application.status = new_status
+        application.feedback = request.form.get('feedback', '')
+        application.updated_at = datetime.utcnow()
+        db.session.commit()
+        flash(f'Application has been {new_status}!', 'success')
+    
+    return redirect(url_for('dashboard'))
 
 # Error handler for 404 errors
 @app.errorhandler(404)
