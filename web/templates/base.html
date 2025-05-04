@@ -61,18 +61,10 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('welcome_message') }}">Welcome Generator</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('word_processor') }}">Word Processor</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('submit_application') }}">Submit Application</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
-                        </li>
                     </ul>
                     <!-- Button on Navbar -->
                     <div class="d-flex align-items-center ms-3">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-primary me-2">Admin Login</a>
                         <button class="btn btn-secondary dark-toggle">🌓</button>
                     </div>
                 </div>
