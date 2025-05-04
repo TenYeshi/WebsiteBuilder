@@ -1,151 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ten Yeshi</title>
+{% extends "base.html" %}
 
-        <!-- Open Graph / Facebook -->
-        <meta property="og:title" content="Ten Yeshi | Official Website">
-        <meta property="og:description" content="Explore Ten Yeshi’s portfolio and projects.">
-        <meta property="og:image" content="https://yourdomain.com/static/img/social-preview.jpg">
-        <meta property="og:url" content="https://yourdomain.com">
-        <meta property="og:type" content="website">
-        <!-- Twitter -->
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Ten Yeshi | Official Website">
-        <meta name="twitter:description" content="Explore Ten Yeshi’s portfolio and projects.">
-        <meta name="twitter:image" content="https://yourdomain.com/static/img/social-preview.jpg">
+{% block title %}Ten Yeshi - Home{% endblock %}
 
-        <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/yes_logo.png') }}">
+{% block content %}
+<div class="container mt-3 mb-3 p-3">
+    <div id="imageCarousel" class="carousel slide carousel-fade rounded shadow"
+         data-bs-ride="carousel"
+         data-bs-interval="5000"
+         style="height: 33vh; overflow: hidden;"> 
+        <!-- Carousel controls -->
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- AOS Animation CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-
-</head>
-
-
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <!-- Logo and Company Name -->
-            
-            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
-                <img src="{{ url_for('static', filename='img/yes_logo.png') }}" alt="logo" style="height: 40px; margin-right: 10px;">
-                <span class="company-name">Ten Yeshi</span>
-            </a> 
-
-            <!-- Mobile To  ggle Button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar Links -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('home') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('about') }}">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('welcome_message') }}">Welcome Generator</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('word_processor') }}">Word Processor</a>
-                    </li>
-                </ul>
-                <!-- Button on Navbar -->
-
-                <div class="d-flex align-items-center ms-3">
-                    <button class="btn btn-secondary dark-toggle">🌓</button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-3 mb-3 p-3">
-        <div id="imageCarousel" class="carousel slide carousel-fade rounded shadow"
-             data-bs-ride="carousel"
-             data-bs-interval="5000"
-             style="height: 33vh; overflow: hidden;"> 
-            <!-- Carousel controls -->
-
-          <!-- Indicators (dots) -->
-          <div class="carousel-indicators">
+        <!-- Indicators (dots) -->
+        <div class="carousel-indicators">
             <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="0" aria-label="Slide 1"></button>
             <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
             <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-          </div>
-    
-          <!-- Images -->
-          <div class="carousel-inner h-100">
-            <div class="carousel-item active h-100">
-              <img src="{{ url_for('static', filename='img/logo.png') }}" class="w-100 h-100 d-block object-fit-cover" alt="Logo 1">
-            </div>
-            <div class="carousel-item h-100">
-              <img src="{{ url_for('static', filename='img/logo2.png') }}" class="w-100 h-100 d-block object-fit-cover" alt="Logo 2">
-            </div>
-            <div class="carousel-item h-100">
-              <img src="{{ url_for('static', filename='img/logo3.png') }}" class="w-100 h-100 d-block object-fit-cover" alt="Logo 3">
-            </div>
-          </div>
         </div>
-      </div>
 
-    
-    <!-- Our Features -->
-<div class="container text-center my-5">
-    <h2>Our Features</h2>
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <div class="card p-3 shadow">
-                <h3><a href="{{ url_for('word_processor') }}" class="text-decoration-none">Apply Application</a></h3>
-                <p>A powerful document editor for creating professional application documents.</p>
-                <a href="{{ url_for('word_processor') }}" class="btn btn-primary btn-sm">Try it now</a>
+        <!-- Images -->
+        <div class="carousel-inner h-100">
+            <div class="carousel-item active h-100">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" class="w-100 h-100 d-block object-fit-cover" alt="Logo 1">
             </div>
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <div class="card p-3 shadow">
-                <h3><a href="{{ url_for('welcome_message') }}" class="text-decoration-none">Apply ID Card</a></h3>
-                <p>Create personalized ID cards with custom fields and professional formatting.</p>
-                <a href="{{ url_for('welcome_message') }}" class="btn btn-primary btn-sm">Try it now</a>
+            <div class="carousel-item h-100">
+                <img src="{{ url_for('static', filename='img/logo2.png') }}" class="w-100 h-100 d-block object-fit-cover" alt="Logo 2">
             </div>
-        </div>
-        <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
-            <div class="card p-3 shadow">
-                <h3><a href="{{ url_for('about') }}" class="text-decoration-none">Custom Application</a></h3>
-                <p>Create customized applications tailored to your specific needs and requirements.</p>
-                <a href="{{ url_for('about') }}" class="btn btn-primary btn-sm">Try it now</a>
+            <div class="carousel-item h-100">
+                <img src="{{ url_for('static', filename='img/logo3.png') }}" class="w-100 h-100 d-block object-fit-cover" alt="Logo 3">
             </div>
         </div>
     </div>
 </div>
 
-<footer class="footer mt-auto py-3 bg-dark text-white text-center">
-    <div class="container">
-        <p class="mb-0">&copy; 2025 My Website. All Rights Reserved.</p>
+<!-- Our Features -->
+<div class="container text-center my-5">
+    <h2>Our Features</h2>
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card p-3 shadow">
+                <h3><a href="{{ url_for('submit_application') }}?type=apply" class="text-decoration-none">Apply Application</a></h3>
+                <p>A powerful document editor for creating professional application documents.</p>
+                <a href="{{ url_for('submit_application') }}?type=apply" class="btn btn-primary btn-sm">Try it now</a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card p-3 shadow">
+                <h3><a href="{{ url_for('submit_application') }}?type=id_card" class="text-decoration-none">Apply ID Card</a></h3>
+                <p>Create personalized ID cards with custom fields and professional formatting.</p>
+                <a href="{{ url_for('submit_application') }}?type=id_card" class="btn btn-primary btn-sm">Try it now</a>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
+            <div class="card p-3 shadow">
+                <h3><a href="{{ url_for('submit_application') }}?type=custom" class="text-decoration-none">Custom Application</a></h3>
+                <p>Create customized applications tailored to your specific needs and requirements.</p>
+                <a href="{{ url_for('submit_application') }}?type=custom" class="btn btn-primary btn-sm">Try it now</a>
+            </div>
+        </div>
     </div>
-</footer>
-
-
-<!-- Optional JavaScript -->
-
-<!-- Bootstrap JS Bundle (Includes Popper) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- AOS Animation JS -->
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-
-<!-- Custom JS -->
-<script src="{{ url_for('static', filename='js/index.js') }}"></script>
-
-</body>
-</html>
+</div>
+{% endblock %}

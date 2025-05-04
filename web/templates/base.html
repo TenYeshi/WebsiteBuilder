@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Ten Yeshi{% endblock %}</title>
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:title" content="Ten Yeshi | Official Website">
+        <meta property="og:description" content="Explore Ten Yeshi's portfolio and projects.">
+        <meta property="og:image" content="https://yourdomain.com/static/img/social-preview.jpg">
+        <meta property="og:url" content="https://yourdomain.com">
+        <meta property="og:type" content="website">
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Ten Yeshi | Official Website">
+        <meta name="twitter:description" content="Explore Ten Yeshi's portfolio and projects.">
+        <meta name="twitter:image" content="https://yourdomain.com/static/img/social-preview.jpg">
+
+        <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/yes_logo.png') }}">
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+        <!-- AOS Animation CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+        
+        {% block styles %}{% endblock %}
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <!-- Logo and Company Name -->
+                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                    <img src="{{ url_for('static', filename='img/yes_logo.png') }}" alt="logo" style="height: 40px; margin-right: 10px;">
+                    <span class="company-name">Ten Yeshi</span>
+                </a> 
+
+                <!-- Mobile Toggle Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navbar Links -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('about') }}">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('welcome_message') }}">Welcome Generator</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('word_processor') }}">Word Processor</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('submit_application') }}">Submit Application</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                        </li>
+                    </ul>
+                    <!-- Button on Navbar -->
+                    <div class="d-flex align-items-center ms-3">
+                        <button class="btn btn-secondary dark-toggle">🌓</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mt-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+
+        <footer class="footer mt-auto py-3 bg-dark text-white text-center">
+            <div class="container">
+                <p class="mb-0">&copy; 2025 Ten Yeshi. All Rights Reserved.</p>
+            </div>
+        </footer>
+
+        <!-- Bootstrap JS Bundle (Includes Popper) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- AOS Animation JS -->
+        <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+        <!-- Custom JS -->
+        <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+        
+        {% block scripts %}{% endblock %}
+    </body>
+</html>
