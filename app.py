@@ -1,8 +1,12 @@
 import os
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
+from forms import WelcomeMessageForm
+
+# Import our OpenAI helper functions
+from utils.openai_helper import generate_welcome_message
 
 class Base(DeclarativeBase):
     pass

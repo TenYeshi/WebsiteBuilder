@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email, Length, URL, Optional
 
 class LoginForm(FlaskForm):
@@ -20,3 +20,17 @@ class ProjectForm(FlaskForm):
     description = TextAreaField('Description', validators=[DataRequired()])
     image_url = StringField('Image URL', validators=[DataRequired(), URL()])
     submit = SubmitField('Add Project')
+
+class WelcomeMessageForm(FlaskForm):
+    name = StringField('Your Name', validators=[Optional(), Length(max=64)], 
+                      description="Enter your name for a personalized greeting")
+    time_of_day = SelectField('Time of Day', 
+                             choices=[('morning', 'Morning'), 
+                                     ('afternoon', 'Afternoon'), 
+                                     ('evening', 'Evening'),
+                                     ('night', 'Night')],
+                             validators=[Optional()],
+                             description="Select the time of day")
+    location = StringField('Your Location', validators=[Optional(), Length(max=100)],
+                          description="Enter your city or country (optional)")
+    submit = SubmitField('Generate Welcome Message')
