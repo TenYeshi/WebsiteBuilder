@@ -194,10 +194,32 @@ def submit_application():
     return render_template('submit_application.html', form=form)
 
 # Dashboard for application management
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    applications = Application.query.order_by(Application.created_at.desc()).all()
-    return render_template('dashboard.html', applications=applications)
+    from forms import ApplicationSearchForm
+    search_form = ApplicationSearchForm()
+    query = None
+    
+    if search_form.validate_on_submit():
+        query = search_form.search_query.data
+    else:
+        # Handle GET request with query parameter
+        query = request.args.get('query', '')
+        if query:
+            search_form.search_query.data = query
+            
+    if query:
+        # Search by name or roll number
+        applications = Application.query.filter(
+            db.or_(
+                Application.applicant_name.ilike(f'%{query}%'),
+                Application.roll_number.ilike(f'%{query}%')
+            )
+        ).order_by(Application.created_at.desc()).all()
+    else:
+        applications = Application.query.order_by(Application.created_at.desc()).all()
+    
+    return render_template('dashboard.html', applications=applications, search_form=search_form)
 
 # View a single application
 @app.route('/application/<int:application_id>')

@@ -37,6 +37,10 @@ class ApplicationFeedbackForm(FlaskForm):
     feedback = TextAreaField('Feedback', validators=[DataRequired(), Length(min=5, max=500)])
     submit = SubmitField('Submit Feedback')
 
+class ApplicationSearchForm(FlaskForm):
+    search_query = StringField('Search by Name or Roll Number', validators=[Optional(), Length(max=100)])
+    submit = SubmitField('Search')
+
 class WelcomeMessageForm(FlaskForm):
     name = StringField('Your Name', validators=[Optional(), Length(max=64)], 
                       description="Enter your name for a personalized greeting")
