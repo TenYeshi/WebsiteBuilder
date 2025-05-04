@@ -3,19 +3,6 @@
 {% block title %}Ten Yeshi - Home{% endblock %}
 
 {% block content %}
-<div class="container-fluid bg-primary py-3 text-white text-center">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h3 class="mb-0">Apply for Admissions, ID Cards, and Other Services</h3>
-            </div>
-            <div class="col-md-4">
-                <a href="{{ url_for('submit_application') }}" class="btn btn-light btn-lg">Apply Now</a>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="container mt-3 mb-3 p-3">
     <div id="imageCarousel" class="carousel slide carousel-fade rounded shadow"
          data-bs-ride="carousel"
@@ -40,34 +27,6 @@
             </div>
             <div class="carousel-item h-100">
                 <img src="{{ url_for('static', filename='img/logo3.png') }}" class="w-100 h-100 d-block object-fit-cover" alt="Logo 3">
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Quick Links Section -->
-<div class="container text-center my-5">
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <div class="card shadow h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div>
-                        <h3 class="card-title"><i class="bi bi-person-badge-fill text-primary"></i> For Students</h3>
-                        <p class="card-text">Apply for admissions, ID cards, and other services.</p>
-                    </div>
-                    <a href="{{ url_for('submit_application') }}" class="btn btn-primary btn-lg mt-3">Apply Now</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 mb-3">
-            <div class="card shadow h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div>
-                        <h3 class="card-title"><i class="bi bi-shield-lock-fill text-primary"></i> For Admin</h3>
-                        <p class="card-text">Manage applications, view reports, and approve requests.</p>
-                    </div>
-                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-lg mt-3">Admin Login</a>
-                </div>
             </div>
         </div>
     </div>
