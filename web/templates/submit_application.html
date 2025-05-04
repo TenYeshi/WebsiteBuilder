@@ -11,6 +11,70 @@
                     <h4 class="mb-0">Submit Application</h4>
                 </div>
                 <div class="card-body">
+                    <!-- Search Form -->
+                    <div class="mb-4">
+                        <h5>Check if you have an existing application:</h5>
+                        <form method="GET" action="{{ url_for('submit_application') }}" class="d-flex">
+                            <div class="input-group">
+                                <input type="text" name="search_query" class="form-control" placeholder="Search by name or roll number" 
+                                       value="{{ request.args.get('search_query', '') }}">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-search"></i> Search
+                                </button>
+                            </div>
+                        </form>
+                        {% if existing_applications %}
+                            <div class="mt-3">
+                                <h6>Existing applications found:</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Roll No</th>
+                                                <th>Class</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for app in existing_applications %}
+                                                <tr>
+                                                    <td>{{ app.applicant_name }}</td>
+                                                    <td>{{ app.roll_number or 'N/A' }}</td>
+                                                    <td>{{ app.class_name or 'N/A' }}</td>
+                                                    <td>
+                                                        {% if app.status == 'pending' %}
+                                                            <span class="badge bg-warning">Pending</span>
+                                                        {% elif app.status == 'approved' %}
+                                                            <span class="badge bg-success">Approved</span>
+                                                        {% elif app.status == 'rejected' %}
+                                                            <span class="badge bg-danger">Rejected</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a href="{{ url_for('view_application', application_id=app.id) }}" class="btn btn-sm btn-primary">
+                                                                <i class="bi bi-eye"></i> View
+                                                            </a>
+                                                            <a href="{{ url_for('submit_application') }}?prefill={{ app.id }}" class="btn btn-sm btn-secondary">
+                                                                <i class="bi bi-pencil"></i> Use Details
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="alert alert-info mt-2">
+                                    If you need to make a new application, please fill out the form below.
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <h5>New Application Form:</h5>
                     <form method="POST" action="{{ url_for('submit_application') }}">
                         {{ form.hidden_tag() }}
                         

@@ -170,6 +170,37 @@ def word_processor():
 @app.route('/submit-application', methods=['GET', 'POST'])
 def submit_application():
     form = ApplicationForm()
+    existing_applications = None
+    
+    # Handle search query
+    search_query = request.args.get('search_query', '')
+    if search_query:
+        # Search for existing applications by name or roll number
+        existing_applications = Application.query.filter(
+            db.or_(
+                Application.applicant_name.ilike(f'%{search_query}%'),
+                Application.roll_number.ilike(f'%{search_query}%')
+            )
+        ).order_by(Application.created_at.desc()).all()
+    
+    # Handle prefill from existing application
+    prefill_id = request.args.get('prefill')
+    if prefill_id and request.method == 'GET':
+        try:
+            prefill_app = Application.query.get(int(prefill_id))
+            if prefill_app:
+                form.applicant_name.data = prefill_app.applicant_name
+                form.email.data = prefill_app.email
+                form.father_name.data = prefill_app.father_name
+                form.roll_number.data = prefill_app.roll_number
+                form.class_name.data = prefill_app.class_name
+                form.date_of_birth.data = prefill_app.date_of_birth
+                form.address.data = prefill_app.address
+                form.phone_number.data = prefill_app.phone_number
+                # Don't prefill content as it will likely be different for each application
+                flash('Form pre-filled with existing student information. Please review and update as needed.', 'info')
+        except:
+            pass  # If any error occurs, just ignore prefill
     
     if form.validate_on_submit():
         # Create new application
@@ -191,7 +222,7 @@ def submit_application():
         flash('Your application has been submitted successfully!', 'success')
         return redirect(url_for('home'))
     
-    return render_template('submit_application.html', form=form)
+    return render_template('submit_application.html', form=form, existing_applications=existing_applications)
 
 # Dashboard for application management
 @app.route('/dashboard', methods=['GET', 'POST'])
