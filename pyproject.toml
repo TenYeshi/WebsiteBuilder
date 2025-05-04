@@ -1,6 +1,14 @@
-[project]
-name = "repl-nix-workspace"
+[tool.poetry]
+name = "tenyeshi-portfolio"
 version = "0.1.0"
-description = "Add your description here"
-requires-python = ">=3.11"
-dependencies = []
+description = "A dynamic personal portfolio website for Ten Yeshi using Flask"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "^3.0.0"
+gunicorn = "^21.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

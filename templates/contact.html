@@ -55,72 +55,42 @@
                     <div class="card-body p-4">
                         <h2 class="mb-4">Send Me a Message</h2>
                         <form id="contactForm" method="POST" action="{{ url_for('contact') }}" class="needs-validation" novalidate>
-                            {{ form.csrf_token }}
-                            
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="{{ form.name.id }}" class="form-label">{{ form.name.label }}</label>
-                                    {{ form.name(class="form-control", placeholder="Your name") }}
+                                    <label for="name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Your name" required>
                                     <div class="invalid-feedback">
                                         Please provide your name.
                                     </div>
-                                    {% if form.name.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.name.errors %}
-                                                {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
-                                    <label for="{{ form.email.id }}" class="form-label">{{ form.email.label }}</label>
-                                    {{ form.email(class="form-control", placeholder="Your email") }}
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Your email" required>
                                     <div class="invalid-feedback">
                                         Please provide a valid email.
                                     </div>
-                                    {% if form.email.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.email.errors %}
-                                                {{ error }}
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
                                 </div>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="{{ form.subject.id }}" class="form-label">{{ form.subject.label }}</label>
-                                {{ form.subject(class="form-control", placeholder="Subject of your message") }}
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject of your message" required>
                                 <div class="invalid-feedback">
                                     Please provide a subject.
                                 </div>
-                                {% if form.subject.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.subject.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
                             </div>
                             
                             <div class="mb-3">
-                                <label for="{{ form.message.id }}" class="form-label">{{ form.message.label }}</label>
-                                {{ form.message(class="form-control", rows=5, placeholder="Your message") }}
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" placeholder="Your message" required></textarea>
                                 <div class="invalid-feedback">
                                     Please provide a message.
                                 </div>
-                                {% if form.message.errors %}
-                                    <div class="text-danger">
-                                        {% for error in form.message.errors %}
-                                            {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
                             </div>
                             
                             <div class="d-grid gap-2">
-                                {{ form.submit(class="btn btn-primary btn-lg") }}
+                                <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
                             </div>
                         </form>
                     </div>
