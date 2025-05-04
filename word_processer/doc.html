@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document 2</title>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome + Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0eafc, #cfdef3);
+      padding: 20px;
+      margin: 0;
+      transition: background 0.3s ease-in-out;
+    }
+
+    header {
+      background: #ffffffd9;
+      padding: 15px 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background: #f0f0f0;
+      border-bottom: 1px solid #ccc;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .tabs {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .tab-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-btn:hover, .tab-btn.active {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
+
+    .ribbon {
+      display: none;
+      padding: 15px;
+      background: #f8f8f8;
+      border-top: 1px solid #ccc;
+      gap: 20px;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .ribbon.active {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .editor-container {
+      border: 1px solid #ccc;
+      margin: 20px auto;
+      background: #fff;
+      overflow: auto;
+      padding: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+      border-radius: 8px;
+    }
+
+    .page-area {
+      background: white;
+      border: 1px dashed #bbb;
+      min-height: 100px;
+      box-sizing: border-box;
+      padding: 50px;
+      position: relative;
+      transition: padding 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 6px;
+    }
+
+    .page-area:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+    }
+
+    select, input[type="number"] {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      transition: border-color 0.3s ease;
+      font-size: 16px;
+    }
+
+    select:focus, input:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+    }
+    label {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .modal-header {
+      background-color: #007bff;
+      color: white;
+    }
+    .modal-footer .btn {
+      border-radius: 6px;
+    }
+    /* Glowing animation effect on active padding edge */
+    .page-area.flash-top {
+      box-shadow: inset 0 4px 0 0 rgba(0, 123, 255, 0.4);
+    }
+    .page-area.flash-right {
+      box-shadow: inset -4px 0 0 0 rgba(0, 123, 255, 0.4);
+    }
+    .page-area.flash-bottom {
+      box-shadow: inset 0 -4px 0 0 rgba(0, 123, 255, 0.4);
+    }
+    .page-area.flash-left {
+      box-shadow: inset 4px 0 0 0 rgba(0, 123, 255, 0.4);
+    }
+
+    /* Shape Styles */
+    .shape {
+      border: 2px solid #007bff;
+      background-color: rgba(0, 123, 255, 0.1);
+      position: absolute;
+      width: 200px;
+      height: 150px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      cursor: move;
+      border-radius: 4px;
+    }
+
+    .shape img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .shape-toolbar {
+      position: absolute;
+      display: flex;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      padding: 6px;
+      z-index: 100;
+    }
+
+    .shape-toolbar button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .shape-toolbar button:hover {
+      color: #007bff;
+    }
+
+    #editor-container {
+      width: 100%;
+      height: 500px;
+      border: 2px dashed #ccc;
+      position: relative;
+      overflow: hidden;
+    }
+
+
+    .shape img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .toolbar {
+      position: absolute;
+      top: 100%; /* Place the toolbar just below the shape */
+      left: 0;
+      display: flex;
+      gap: 4px;
+      visibility: hidden; /* Hide by default */
+      margin-top: 4px; /* Optional: to give some space below the shape */
+    }
+
+    .shape.selected .toolbar {
+      visibility: visible; /* Show when selected */
+    }
+
+    .toolbar button {
+      background: white;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+
+    .resizer {
+      width: 12px;
+      height: 12px;
+      background: #007bff;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      cursor: se-resize;
+    }
+
+    #imageInput {
+      display: none;
+    }
+
+    /* Dialog Box Styles */
+    #imageDialog {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+    }
+
+    #imageDialog button {
+      margin-top: 10px;
+      padding: 6px 12px;
+    }
+
+    .dialog-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      display: none;
+    }
+
+
+
+
+  #dialogBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+  }
+
+  #imageDialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    min-width: 300px;
+    max-width: 400px;
+  }
+
+  .modal-content {
+    transition: all 0.3s ease;
+  }
+
+  .modal-body button {
+    min-width: 90px;
+  }
+</style>
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" id="homeTab" data-tab="home"><i class="fas fa-home"></i> Home</button>
+      <button class="tab-btn" data-tab="insert"><i class="fas fa-plus"></i> Insert</button>
+      <button class="tab-btn" data-tab="layer"><i class="fas fa-layer-group"></i> Layer</button>
+      <button class="tab-btn" data-tab="review"><i class="fas fa-pen-to-square"></i> Review</button>
+      <button class="tab-btn" data-tab="view"><i class="fas fa-eye"></i> View</button>
+    </div>
+  </header>
+
+  <div id="home" class="ribbon active">
+
+    <!-- font family -->
+    <button onclick="document.execCommand('undo')" title="Undo"><i class="fas fa-undo"></i></button>
+    <button onclick="document.execCommand('redo')" title="Redo"><i class="fas fa-redo"></i></button>
+    <select id="fontFamilySelect" title="Font">
+      <option disabled selected>Font</option>
+      <option value="Arial" style="font-family: Arial">Arial</option>
+      <option value="Courier New" style="font-family: Courier New">Courier New</option>
+      <option value="Georgia" style="font-family: Georgia">Georgia</option>
+      <option value="Times New Roman" style="font-family: Times New Roman">Times New Roman</option>
+      <option value="Verdana" style="font-family: Verdana">Verdana</option>
+    </select>
+
+    <!-- Add the font size input element in the Home ribbon -->
+    <label for="fontSizeInput" class="ms-3">Size:</label>
+    <input type="number" id="fontSizeInput" placeholder="Size" title="Font Size" min="6" max="72" style="width:70px;" />
+    <label for="fontSizeInput" class="ms-3">Color</label>
+    <input type="color" id="textColorPicker" title="Text Color">
+    <button onclick="document.execCommand('bold')" title="Bold"><i class="fas fa-bold"></i></button>
+    <button onclick="document.execCommand('italic')" title="Italic"><i class="fas fa-italic"></i></button>
+    <button onclick="document.execCommand('justifyLeft')" title="Align Left"><i class="fas fa-align-left"></i></button>
+    <button onclick="document.execCommand('justifyCenter')" title="Align Center"><i class="fas fa-align-center"></i></button>
+    <button onclick="document.execCommand('justifyRight')" title="Align Right"><i class="fas fa-align-right"></i></button>
+    <button onclick="document.execCommand('justifyFull')" title="Justify"><i class="fas fa-align-justify"></i></button>
+  </div>
+
+  <div id="insert" class="ribbon">
+    <button id="insertBtn" aria-label="Insert an element" title="Insert an element" class="btn btn-primary">Insert image</button>
+    <button>Link</button>
+    <button id="editImageBtn" style="display: none;" class="btn btn-primary">Edit Image</button>
+  </div>
+
+  <div id="layer" class="ribbon">
+    <label for="sizeSelect">Page Size:</label>
+    <select id="sizeSelect">
+      <option value="a4" selected>A4 (210×297mm)</option>
+      <option value="letter">Letter (216×279mm)</option>
+      <option value="legal">Legal (216×356mm)</option>
+      <option value="id-card">ID Card (86×54mm)</option>
+      <option value="custom">Custom (px)</option>
+    </select>
+
+    <label for="orientationSelect" class="ms-3">Page Orientation:</label>
+    <select id="orientationSelect">
+      <option value="portrait" selected>Portrait</option>
+      <option value="landscape">Landscape</option>
+    </select>
+
+
+    <button class="btn btn-primary" id="openMarginModal" data-bs-toggle="modal" data-bs-target="#marginModal">
+      <i class="fas fa-arrows-alt-v"></i> Change Margins
+    </button>
+
+    <div id="customSizeInputs" style="display: none; gap: 5px;">
+      <label for="customWidth">Width:</label>
+      <input type="number" id="customWidth" value="600" style="width: 80px;" /> px
+      <label for="customHeight" style="margin-left: 10px;">Height:</label>
+      <input type="number" id="customHeight" value="400" style="width: 80px;" /> px
+    </div>
+  </div>
+
+  <div id="review"  class="ribbon">
+    <button class="btn btn-primary" id="spellCheckBtn"><i class="fas fa-check"></i> Spell Check</button>
+    <button class="btn btn-primary" id="grammarCheckBtn"><i class="fas fa-check-double"></i> Grammar Check</button> 
+  </div>
+  <div class="editor-container">
+    <div class="page-area" id="editor" contenteditable="true">
+      Type here...
+    </div>
+  </div>
+
+  <!--  Image Editing Dialog -->
+  <input type="file" id="imageInput" accept="image/*" />
+
+  <!-- Image Editing Dialog -->
+  <div id="imageDialog">
+  <h3>Image Editing</h3>
+  <button id="rotateBtn">Rotate Image</button>
+  <button id="replaceImageBtn">Replace Image</button>
+  <button id="deleteShapeBtn">Delete Shape</button>
+  <button id="closeDialogBtn">Close</button>
+  </div>
+
+  <!-- Dialog Background -->
+<div id="dialogBackground" class="modal-backdrop fade show" style="display: none;"></div>
+
+<!-- Image Edit Dialog -->
+<div id="imageDialog" class="modal-dialog-centered modal" style="display: none;">
+  <div class="modal-content shadow-lg rounded-4 animate__animated animate__zoomIn">
+    <div class="modal-header bg-primary text-white">
+      <h5 class="modal-title"><i class="fas fa-image me-2"></i>Edit Image</h5>
+      <button type="button" class="btn-close btn-close-white" aria-label="Close" id="closeDialogBtn"></button>
+    </div>
+    <div class="modal-body d-flex justify-content-around gap-3">
+      <button id="rotateBtn" class="btn btn-outline-primary">
+        <i class="fas fa-rotate"></i> Rotate
+      </button>
+      <button id="replaceImageBtn" class="btn btn-outline-warning">
+        <i class="fas fa-sync-alt"></i> Replace
+      </button>
+      <button id="deleteShapeBtn" class="btn btn-outline-danger">
+        <i class="fas fa-trash"></i> Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- margin Editing Dialog -->
+  <div class="modal fade" id="marginModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Adjust Page Margins</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="modalMarginTop" class="form-label">Top Margin (px)</label>
+            <input type="number" id="modalMarginTop" class="form-control" value="10" min="0">
+          </div>
+          <div class="mb-3">
+            <label for="modalMarginBottom" class="form-label">Bottom Margin (px)</label>
+            <input type="number" id="modalMarginBottom" class="form-control" value="10" min="0">
+          </div>
+          <div class="mb-3">
+            <label for="modalMarginLeft" class="form-label">Left Margin (px)</label>
+            <input type="number" id="modalMarginLeft" class="form-control" value="10" min="0">
+          </div>
+          <div class="mb-3">
+            <label for="modalMarginRight" class="form-label">Right Margin (px)</label>
+            <input type="number" id="modalMarginRight" class="form-control" value="10" min="0">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="applyMarginChanges">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // DOM Elements
+      const editor = document.getElementById("editor");
+      const fontSizeInput = document.getElementById("fontSizeInput");
+      const editorContainer = document.querySelector(".editor-container");
+      const sizeSelect = document.getElementById("sizeSelect");
+      const orientationSelect = document.getElementById("orientationSelect");
+      const customWidth = document.getElementById("customWidth");
+      const customHeight = document.getElementById("customHeight");
+      const customInputs = document.getElementById("customSizeInputs");
+
+      const modalMarginTop = document.getElementById("modalMarginTop");
+      const modalMarginRight = document.getElementById("modalMarginRight");
+      const modalMarginBottom = document.getElementById("modalMarginBottom");
+      const modalMarginLeft = document.getElementById("modalMarginLeft");
+
+      const container = document.getElementById("editor");
+      const insertBtn = document.getElementById("insertBtn");
+      const editImageBtn = document.getElementById("editImageBtn");
+      const imageInput = document.getElementById("imageInput");
+      const imageDialog = document.getElementById("imageDialog");
+      const dialogBackground = document.getElementById("dialogBackground");
+      const closeDialogBtn = document.getElementById("closeDialogBtn");
+      const rotateBtn = document.getElementById("rotateBtn");
+      const replaceImageBtn = document.getElementById("replaceImageBtn");
+      const deleteShapeBtn = document.getElementById("deleteShapeBtn");
+
+      let currentShape = null;
+
+      // Page sizes
+      const sizes = {
+        a4: { width: 794, height: 1123 },
+        letter: { width: 816, height: 1056 },
+        legal: { width: 816, height: 1280 },
+        "id-card": { width: 324, height: 203 }
+      };
+
+      // Tab switching
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".ribbon").forEach(r => r.classList.remove("active"));
+          document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+          const tab = btn.dataset.tab;
+          if (tab) {
+            document.getElementById(tab).classList.add("active");
+            btn.classList.add("active");
+          }
+        });
+      });
+
+      // Font family & size
+      document.getElementById("fontFamilySelect").addEventListener("change", e => {
+        document.execCommand("fontName", false, e.target.value);
+      });
+
+      fontSizeInput.addEventListener("input", () => {
+        let value = parseInt(fontSizeInput.value);
+        if (!isNaN(value)) {
+          document.execCommand("fontSize", false, "7");
+          const fontTags = editor.getElementsByTagName("font");
+          if (fontTags.length > 0) {
+            const lastFont = fontTags[fontTags.length - 1];
+            lastFont.removeAttribute("size");
+            lastFont.style.fontSize = `${value}pt`;
+          }
+        }
+      });
+
+      // Text color
+      document.getElementById("textColorPicker").addEventListener("input", function () {
+        document.execCommand("foreColor", false, this.value);
+      });
+
+      // Margin application
+      function applyMargins() {
+        editor.style.paddingTop = modalMarginTop.value + "px";
+        editor.style.paddingRight = modalMarginRight.value + "px";
+        editor.style.paddingBottom = modalMarginBottom.value + "px";
+        editor.style.paddingLeft = modalMarginLeft.value + "px";
+        ["top", "right", "bottom", "left"].forEach(edge => {
+          editor.classList.add(`flash-${edge}`);
+          setTimeout(() => editor.classList.remove(`flash-${edge}`), 300);
+        });
+      }
+
+      document.getElementById("applyMarginChanges").addEventListener("click", () => {
+        applyMargins();
+        $('#marginModal').modal('hide');
+      });
+
+      // Page size + orientation
+      function applySizeAndMargins(width, height) {
+        if (orientationSelect.value === "landscape") [width, height] = [height, width];
+        editorContainer.style.width = `${width + 40}px`;
+        editorContainer.style.height = `${height + 40}px`;
+      }
+
+      function updatePageSize() {
+        const selected = sizeSelect.value;
+        let width, height;
+
+        if (selected === "custom") {
+          customInputs.style.display = "inline-flex";
+          width = parseInt(customWidth.value);
+          height = parseInt(customHeight.value);
+        } else {
+          customInputs.style.display = "none";
+          ({ width, height } = sizes[selected]);
+        }
+
+        applySizeAndMargins(width, height);
+      }
+
+      sizeSelect.addEventListener("change", updatePageSize);
+      orientationSelect.addEventListener("change", updatePageSize);
+      [customWidth, customHeight].forEach(input => input.addEventListener("input", updatePageSize));
+
+      // Load event
+      window.addEventListener("load", () => {
+        fontSizeInput.value ||= 12;
+        editor.style.fontSize = fontSizeInput.value + 'px';
+        updatePageSize();
+        applyMargins();
+      });
+
+      // Insert Shape
+      insertBtn.addEventListener("click", () => {
+        const shape = document.createElement("div");
+        shape.className = "shape";
+        shape.setAttribute("draggable", "true");
+
+        const toolbar = document.createElement("div");
+        toolbar.className = "toolbar";
+
+        const rotateBtn = document.createElement("button");
+        rotateBtn.innerHTML = "<i class='fas fa-rotate'></i>";
+        rotateBtn.onclick = () => {
+          let current = parseInt(shape.dataset.angle || "0");
+          current = (current + 45) % 360;
+          shape.dataset.angle = current;
+          shape.style.transform = `rotate(${current}deg)`;
+        };
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.innerHTML = "<i class='fas fa-trash'></i>";
+        deleteBtn.onclick = () => shape.remove();
+
+        toolbar.append(rotateBtn, deleteBtn);
+        shape.append(toolbar);
+
+        const resizer = document.createElement("div");
+        resizer.className = "resizer";
+        shape.appendChild(resizer);
+
+        makeDraggable(shape);
+        makeResizable(shape, resizer);
+        promptForImage(shape);
+
+        shape.addEventListener("click", e => {
+          e.stopPropagation();
+          selectShape(shape);
+        });
+
+        container.appendChild(shape);
+      });
+
+      // Track caret position and allow shape drop
+      editor.addEventListener("dragover", (e) => {
+        e.preventDefault(); // Allow drop
+        });
+
+        editor.addEventListener("drop", (e) => {
+          e.preventDefault();
+          if (draggedShape) {
+            const range = getCaretRangeFromPoint(e.clientX, e.clientY);
+            if (range) {
+              range.insertNode(draggedShape);
+              draggedShape = null;
+            }
+          }
+        });
+
+
+        // Get caret position at a specific point in the editor
+    function getCaretRangeFromPoint(x, y) {
+      if (document.caretRangeFromPoint) {
+        return document.caretRangeFromPoint(x, y);
+      } else if (document.caretPositionFromPoint) {
+        const pos = document.caretPositionFromPoint(x, y);
+        const range = document.createRange();
+        range.setStart(pos.offsetNode, pos.offset);
+        range.collapse(true);
+        return range;
+      }
+      return null;
+    }
+
+      // Deselect shapes
+      document.addEventListener("click", () => {
+        container.querySelectorAll(".shape").forEach(s => s.classList.remove("selected"));
+      });
+
+      function selectShape(shape) {
+        container.querySelectorAll(".shape").forEach(s => s.classList.remove("selected"));
+        shape.classList.add("selected");
+        currentShape = shape;
+        editImageBtn.style.display = shape.querySelector("img") ? "inline-block" : "none";
+      }
+
+
+      // Prompt for image file
+      function promptForImage(shape) {
+        imageInput.click();
+        imageInput.onchange = function () {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = e => {
+              const img = document.createElement("img");
+              img.src = e.target.result;
+              shape.querySelectorAll("img").forEach(el => el.remove());
+              shape.insertBefore(img, shape.querySelector(".resizer"));
+            };
+            reader.readAsDataURL(file);
+          }
+        };
+      }
+
+      // Edit image dialog
+
+      editImageBtn.addEventListener("click", () => {
+        if (currentShape?.querySelector("img")) {
+          dialogBackground.style.display = "block";
+          imageDialog.style.display = "block";
+        }
+      });
+
+      closeDialogBtn.addEventListener("click", () => {
+        dialogBackground.style.display = "none";
+        imageDialog.style.display = "none";
+        editImageBtn.style.display = "none";
+
+      });
+
+
+
+      rotateBtn.addEventListener("click", () => {
+        if (currentShape?.querySelector("img")) {
+          let current = parseInt(currentShape.dataset.angle || "0");
+          current = (current + 45) % 360;
+          currentShape.dataset.angle = current;
+          currentShape.style.transform = `rotate(${current}deg)`;
+        }
+      });
+
+      replaceImageBtn.addEventListener("click", () => {
+        if (currentShape) {
+          promptForImage(currentShape);
+          closeDialogBtn.click();
+        }
+      });
+
+      deleteShapeBtn.addEventListener("click", () => {
+        if (currentShape) {
+          currentShape.remove();
+          closeDialogBtn.click();
+        }
+      });
+
+      function makeDraggable(el) {
+        let offsetX, offsetY;
+        const containerRect = container.getBoundingClientRect();
+
+        el.addEventListener("mousedown", e => {
+          if (e.target.classList.contains("resizer") || e.target.closest(".toolbar")) return;
+          offsetX = e.offsetX;
+          offsetY = e.offsetY;
+
+          const onMouseMove = eMove => {
+            let newX = eMove.pageX - container.offsetLeft - offsetX;
+            let newY = eMove.pageY - container.offsetTop - offsetY;
+            newX = Math.max(0, Math.min(containerRect.width - el.offsetWidth, newX));
+            newY = Math.max(0, Math.min(containerRect.height - el.offsetHeight, newY));
+            el.style.left = `${newX}px`;
+            el.style.top = `${newY}px`;
+          };
+
+          const onMouseUp = () => {
+            document.removeEventListener("mousemove", onMouseMove);
+            document.removeEventListener("mouseup", onMouseUp);
+          };
+
+          document.addEventListener("mousemove", onMouseMove);
+          document.addEventListener("mouseup", onMouseUp);
+        });
+      }
+
+      function makeResizable(shape, resizer) {
+        resizer.addEventListener("mousedown", e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const initWidth = shape.offsetWidth;
+          const initHeight = shape.offsetHeight;
+          const startX = e.clientX;
+          const startY = e.clientY;
+
+          const onMouseMove = eMove => {
+            shape.style.width = `${initWidth + (eMove.clientX - startX)}px`;
+            shape.style.height = `${initHeight + (eMove.clientY - startY)}px`;
+          };
+
+          const onMouseUp = () => {
+            document.removeEventListener("mousemove", onMouseMove);
+            document.removeEventListener("mouseup", onMouseUp);
+          };
+
+          document.addEventListener("mousemove", onMouseMove);
+          document.addEventListener("mouseup", onMouseUp);
+        });
+      }
+    });
+  </script>
+
+  <!-- <script>
+
+    // Handle home tab aned in  sert tab
+    const fontSizeInput = document.getElementById("fontSizeInput");
+
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const ribbons = document.querySelectorAll(".ribbon");
+    const editor = document.getElementById("editor");
+
+    // Handle layer size change
+    const editorContainer = document.querySelector(".editor-container");
+
+    const sizeSelect = document.getElementById("sizeSelect");
+    const customWidth = document.getElementById("customWidth");
+    const customHeight = document.getElementById("customHeight");
+    const customInputs = document.getElementById("customSizeInputs");
+
+    const modalMarginTop = document.getElementById("modalMarginTop");
+    const modalMarginRight = document.getElementById("modalMarginRight");
+    const modalMarginBottom = document.getElementById("modalMarginBottom");
+    const modalMarginLeft = document.getElementById("modalMarginLeft");
+
+    // Handle image insertion
+    const container = document.getElementById("editor-container");
+    const insertBtn = document.getElementById("insertBtn");
+    const editImageBtn = document.getElementById("editImageBtn");
+    const imageInput = document.getElementById("imageInput");
+    const imageDialog = document.getElementById("imageDialog");
+    const dialogBackground = document.getElementById("dialogBackground");
+    const closeDialogBtn = document.getElementById("closeDialogBtn");
+    const rotateBtn = document.getElementById("rotateBtn");
+    const replaceImageBtn = document.getElementById("replaceImageBtn");
+    const deleteShapeBtn = document.getElementById("deleteShapeBtn");
+
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        ribbons.forEach(r => r.classList.remove("active"));
+        tabButtons.forEach(b => b.classList.remove("active"));
+        const tab = btn.dataset.tab;
+        if (tab) {
+          document.getElementById(tab).classList.add("active");
+          btn.classList.add("active");
+        }
+      });
+    });
+
+    document.getElementById("fontFamilySelect").addEventListener("change", function() {
+      document.execCommand("fontName", false, this.value);
+    });
+
+    fontSizeInput.addEventListener("input", function () {
+      let value = parseInt(this.value);
+      if (!isNaN(value)) {
+        document.execCommand("fontSize", false, "7");
+        const fontTags = editor.getElementsByTagName("font");
+        if (fontTags.length > 0) {
+          fontTags[fontTags.length - 1].removeAttribute("size");
+          fontTags[fontTags.length - 1].style.fontSize = `${value}pt`;
+        }
+      }
+    });
+
+
+    // Handle font size change
+    window.addEventListener("load", () => {
+      if (!fontSizeInput.value) {
+        fontSizeInput.value = 12;
+        document.execCommand("fontSize", false, "3");
+      }
+    });
+
+    // Handle font color change
+    document.getElementById("textColorPicker").addEventListener("input", function() {
+      document.execCommand("foreColor", false, this.value);
+    });
+
+
+    // Handle change in page size
+    const sizes = {
+      a4: { width: 794, height: 1123 },
+      letter: { width: 816, height: 1056 },
+      legal: { width: 816, height: 1280 },
+      "id-card": { width: 324, height: 203 } // ID Card: 86mm x 54mm converted to px
+    };
+
+    function applySizeAndMargins(width, height) {
+      const orientation = document.getElementById("orientationSelect").value;
+      if (orientation === "landscape") {
+        [width, height] = [height, width];
+      }
+      editorContainer.style.width = `${width + 40}px`;  // add more buffer if needed
+      editorContainer.style.height = `${height + 40}px`;
+    }
+
+
+    function applyMargins() {
+      editor.style.paddingTop = modalMarginTop.value + "px";
+      editor.style.paddingRight = modalMarginRight.value + "px";
+      editor.style.paddingBottom = modalMarginBottom.value + "px";
+      editor.style.paddingLeft = modalMarginLeft.value + "px";
+
+      flashEdge("top");
+      flashEdge("right");
+      flashEdge("bottom");
+      flashEdge("left");
+    }
+
+    function flashEdge(edge) {
+      const className = `flash-${edge}`;
+      editor.classList.add(className);
+      setTimeout(() => {
+        editor.classList.remove(className);
+      }, 300);
+    }
+
+    function updatePageSizeAndOrientation() {
+      const val = sizeSelect.value;
+      const orientation = document.getElementById("orientationSelect").value;
+
+      let width, height;
+
+      if (val === "custom") {
+        customInputs.style.display = "inline-flex";
+        width = parseInt(customWidth.value);
+        height = parseInt(customHeight.value);
+      } else {
+        customInputs.style.display = "none";
+        const size = sizes[val];
+        width = size.width;
+        height = size.height;
+      }
+
+      if (orientation === "landscape") {
+        [width, height] = [height, width];
+      }
+
+      applySizeAndMargins(width, height);
+    }
+
+    sizeSelect.addEventListener("change", updatePageSizeAndOrientation);
+    document.getElementById("orientationSelect").addEventListener("change", updatePageSizeAndOrientation);
+
+    [customWidth, customHeight].forEach(el =>
+    el.addEventListener("input", updatePageSizeAndOrientation)
+    );
+
+    [customWidth, customHeight].forEach(el =>
+      el.addEventListener("input", () =>
+        applySizeAndMargins(parseInt(customWidth.value), parseInt(customHeight.value))
+      )
+    );
+
+    document.getElementById("applyMarginChanges").addEventListener("click", () => {
+      applyMargins();
+      $('#marginModal').modal('hide');
+    });
+
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updatePageSizeAndOrientation();
+    });
+
+    sizeSelect.addEventListener("change", () => {
+      const selected = sizeSelect.value;
+      if (selected === "custom") {
+        customInputs.style.display = "flex";
+        applySizeAndMargins(parseInt(customWidth.value), parseInt(customHeight.value));
+      } else {
+        customInputs.style.display = "none";
+        const { width, height } = sizes[selected];
+        applySizeAndMargins(width, height);
+      }
+    });
+
+    window.addEventListener('load', () => {
+      updatePageSize(); 
+      applyMargins();
+      // Set the default font size if the input value is empty
+      if (!fontSizeInput.value) {
+        fontSizeInput.value = 12;
+      }
+
+      // Apply the default font size to the body or editor on load
+      document.querySelector('.editor').style.fontSize = fontSizeInput.value + 'px';
+
+    });
+
+    // Handle image insertion
+    let currentShape = null; // To track the selected shape with image
+
+
+    insertBtn.addEventListener("click", () => {
+      const shape = document.createElement("div");
+      shape.className = "shape";
+      container.appendChild(shape);
+
+    // Add toolbar
+    const toolbar = document.createElement("div");
+    toolbar.className = "toolbar";
+
+    const rotateBtn = document.createElement("button");
+    rotateBtn.innerHTML = "<i class='fas fa-rotate'></i>";
+    rotateBtn.onclick = () => {
+      let current = parseInt(shape.dataset.angle || "0");
+      current = (current + 45) % 360;
+      shape.dataset.angle = current;
+      shape.style.transform = `rotate(${current}deg)`;
+    };
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "<i class='fas fa-trash'></i>";
+    deleteBtn.onclick = () => shape.remove();
+
+    toolbar.appendChild(rotateBtn);
+    toolbar.appendChild(deleteBtn);
+    shape.appendChild(toolbar);
+
+    // Add resizer
+    const resizer = document.createElement("div");
+    resizer.className = "resizer";
+    shape.appendChild(resizer);
+    makeResizable(shape, resizer);
+
+    makeDraggable(shape);
+    promptForImage(shape);
+
+    // Add click event to select shape
+    shape.addEventListener("click", (e) => {
+      e.stopPropagation();  // Prevent the container click event from firing
+      selectShape(shape);
+    });
+  });
+
+  // Deselect all shapes if clicking outside the container or on an unselected shape
+  document.addEventListener("click", () => {
+    const shapes = container.querySelectorAll('.shape');
+    shapes.forEach(s => s.classList.remove('selected'));
+  });
+
+  function selectShape(shape) {
+    // Deselect all other shapes
+    const shapes = container.querySelectorAll('.shape');
+    shapes.forEach(s => s.classList.remove('selected'));
+
+    // Select the clicked shape
+    shape.classList.add('selected');
+    currentShape = shape;
+
+    // Show the Edit Image button if this shape has an image
+    if (shape.querySelector('img')) {
+      editImageBtn.style.display = "inline-block";
+    } else {
+      editImageBtn.style.display = "none";
+    }
+  }
+
+  function promptForImage(shape) {
+    imageInput.click();
+    imageInput.onchange = function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          shape.querySelectorAll("img").forEach(el => el.remove());
+          shape.insertBefore(img, shape.querySelector(".resizer"));
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  }
+
+  // Event listener for the Edit Image button
+  editImageBtn.addEventListener("click", () => {
+    if (currentShape) {
+      showDialog();
+    }
+  });
+
+  function showDialog() {
+    dialogBackground.style.display = "block";
+    imageDialog.style.display = "block";
+  }
+
+  closeDialogBtn.addEventListener("click", () => {
+    closeDialog();
+  });
+
+  // Close dialog and hide edit button when the dialog is closed
+  function closeDialog() {
+    dialogBackground.style.display = "none";
+    imageDialog.style.display = "none";
+    editImageBtn.style.display = "none"; // Hide Edit Image button when the dialog is closed
+  }
+
+  // Rotate Image
+  rotateBtn.addEventListener("click", () => {
+    if (currentShape && currentShape.querySelector("img")) {
+      let current = parseInt(currentShape.dataset.angle || "0");
+      current = (current + 45) % 360;
+      currentShape.dataset.angle = current;
+      currentShape.style.transform = `rotate(${current}deg)`;
+    }
+  });
+
+  // Replace Image
+  replaceImageBtn.addEventListener("click", () => {
+    if (currentShape) {
+      promptForImage(currentShape);
+      closeDialog();
+    }
+  });
+
+  // Delete Shape
+  deleteShapeBtn.addEventListener("click", () => {
+    if (currentShape) {
+      currentShape.remove();
+      closeDialog();
+    }
+  });
+
+  function makeDraggable(el) {
+    let offsetX, offsetY;
+
+    // Get the bounds of the container
+    const containerRect = container.getBoundingClientRect();
+
+    el.addEventListener("mousedown", (e) => {
+      if (e.target.classList.contains("resizer") || e.target.closest(".toolbar")) return;
+      e.preventDefault();
+      offsetX = e.offsetX;
+      offsetY = e.offsetY;
+
+      function onMouseMove(eMove) {
+        // Calculate the new position of the shape
+        let newX = eMove.pageX - container.offsetLeft - offsetX;
+        let newY = eMove.pageY - container.offsetTop - offsetY;
+
+        // Constrain the shape within the container's boundaries
+        newX = Math.max(0, Math.min(containerRect.width - el.offsetWidth, newX));
+        newY = Math.max(0, Math.min(containerRect.height - el.offsetHeight, newY));
+
+        el.style.left = `${newX}px`;
+        el.style.top = `${newY}px`;
+      }
+
+      function onMouseUp() {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    });
+  }
+
+  function makeResizable(shape, resizer) {
+    resizer.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const initWidth = shape.offsetWidth;
+      const initHeight = shape.offsetHeight;
+      const startX = e.clientX;
+      const startY = e.clientY;
+
+      function onMouseMove(eMove) {
+        const newWidth = initWidth + (eMove.clientX - startX);
+        const newHeight = initHeight + (eMove.clientY - startY);
+        shape.style.width = `${newWidth}px`;
+        shape.style.height = `${newHeight}px`;
+      }
+
+      function onMouseUp() {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    });
+  }
+  </script> -->
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+
