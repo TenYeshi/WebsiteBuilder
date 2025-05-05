@@ -226,6 +226,14 @@ def login():
     
     return render_template('login.html', login_form=login_form, registration_form=registration_form)
 
+# Logout route
+@app.route('/logout')
+def logout():
+    # In a real application with flask-login, you would use logout_user()
+    # Here we'll just redirect to the home page with a message
+    flash('You have been logged out successfully.', 'info')
+    return redirect(url_for('home'))
+
 # Dashboard for application management (requires login)
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
