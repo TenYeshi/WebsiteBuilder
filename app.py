@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
-from forms import WelcomeMessageForm, ApplicationForm, ApplicationFeedbackForm, LoginForm, RegistrationForm, ApplicationSearchForm
+from forms import ApplicationForm, ApplicationFeedbackForm, LoginForm, RegistrationForm, ApplicationSearchForm
 
 # Create an application status form with Flask-WTF
 from flask_wtf import FlaskForm
@@ -15,8 +15,7 @@ class ApplicationStatusForm(FlaskForm):
     password = PasswordField('Email Address', validators=[DataRequired()])
     submit = SubmitField('Check Status')
 
-# Import our OpenAI helper functions
-from utils.openai_helper import generate_welcome_message
+# Import removed as welcome generator functionality is no longer needed
 
 class Base(DeclarativeBase):
     pass
@@ -109,67 +108,7 @@ def contact():
     
     return render_template('contact.html')
 
-# Welcome Message Generator
-@app.route('/welcome-message', methods=['GET', 'POST'])
-def welcome_message():
-    form = WelcomeMessageForm()
-    welcome_text = None
-    api_error = None
-    
-    if form.validate_on_submit():
-        # Gather visitor information
-        visitor_info = {
-            'name': form.name.data or 'there',
-            'time_of_day': form.time_of_day.data or 'today',
-            'location': form.location.data or ''
-        }
-        
-        try:
-            # Generate personalized welcome message
-            welcome_text = generate_welcome_message(visitor_info)
-            
-            # Check if we're using the API key
-            if not os.environ.get('OPENAI_API_KEY'):
-                api_error = "OpenAI API key is not configured. Using fallback messaging."
-                
-        except Exception as e:
-            app.logger.error(f"Error in welcome message generation: {e}")
-            welcome_text = generate_welcome_message(visitor_info)  # This will use fallback
-            api_error = "There was an issue with the OpenAI API. Using fallback message generation."
-        
-    return render_template('welcome_message.html', form=form, welcome_text=welcome_text, api_error=api_error)
-
-# AJAX endpoint for welcome message generation
-@app.route('/api/generate-welcome', methods=['POST'])
-def api_generate_welcome():
-    data = request.json
-    visitor_info = {
-        'name': data.get('name', 'there'),
-        'time_of_day': data.get('time_of_day', 'today'),
-        'location': data.get('location', '')
-    }
-    
-    try:
-        welcome_text = generate_welcome_message(visitor_info)
-        
-        # Check if API key is missing
-        if not os.environ.get('OPENAI_API_KEY'):
-            return jsonify({
-                'status': 'partial_success',
-                'message': welcome_text,
-                'note': "OpenAI API key is not configured. Using fallback messaging."
-            })
-            
-        return jsonify({'status': 'success', 'message': welcome_text})
-    except Exception as e:
-        app.logger.error(f"API welcome message error: {e}")
-        # Still generate a fallback message
-        fallback_text = generate_welcome_message(visitor_info)  # Will use fallback
-        return jsonify({
-            'status': 'error', 
-            'message': fallback_text,
-            'error': str(e)
-        })
+# Welcome routes removed as requested
 
 # Word Processor Application
 @app.route('/word-processor')
