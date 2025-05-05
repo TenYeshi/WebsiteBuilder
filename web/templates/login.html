@@ -1,59 +1,132 @@
 {% extends "base.html" %}
 
-{% block title %}Check Application Status{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-6 mx-auto">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Check Status of Your Application</h4>
+        <div class="col-md-10 mx-auto">
+            <div class="row">
+                <!-- Login Form -->
+                <div class="col-md-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">Login</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('login') }}">
+                                {{ login_form.hidden_tag() }}
+                                
+                                <div class="mb-3">
+                                    {{ login_form.username.label(class="form-label") }}
+                                    {{ login_form.username(class="form-control") }}
+                                    {% if login_form.username.errors %}
+                                        <div class="text-danger">
+                                            {% for error in login_form.username.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    {{ login_form.password.label(class="form-label") }}
+                                    {{ login_form.password(class="form-control") }}
+                                    {% if login_form.password.errors %}
+                                        <div class="text-danger">
+                                            {% for error in login_form.password.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    {{ login_form.remember(class="form-check-input") }}
+                                    {{ login_form.remember.label(class="form-check-label") }}
+                                </div>
+                                
+                                <div class="d-grid">
+                                    {{ login_form.submit(class="btn btn-primary") }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <form method="POST" action="{{ url_for('login') }}">
-                        {{ form.hidden_tag() }}
-                        
-                        <div class="mb-3">
-                            {{ form.username.label(class="form-label") }}
-                            {{ form.username(class="form-control") }}
-                            {% if form.username.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.username.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
+                
+                <!-- Registration Form -->
+                <div class="col-md-6">
+                    <div class="card shadow">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Create Account</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('login') }}">
+                                {{ registration_form.hidden_tag() }}
+                                
+                                <div class="mb-3">
+                                    {{ registration_form.username.label(class="form-label") }}
+                                    {{ registration_form.username(class="form-control") }}
+                                    {% if registration_form.username.errors %}
+                                        <div class="text-danger">
+                                            {% for error in registration_form.username.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-3">
-                            {{ form.password.label(class="form-label") }}
-                            {{ form.password(class="form-control") }}
-                            {% if form.password.errors %}
-                                <div class="text-danger">
-                                    {% for error in form.password.errors %}
-                                        <small>{{ error }}</small>
-                                    {% endfor %}
+                                
+                                <div class="mb-3">
+                                    {{ registration_form.email.label(class="form-label") }}
+                                    {{ registration_form.email(class="form-control") }}
+                                    {% if registration_form.email.errors %}
+                                        <div class="text-danger">
+                                            {% for error in registration_form.email.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
+                                
+                                <div class="mb-3">
+                                    {{ registration_form.password.label(class="form-label") }}
+                                    {{ registration_form.password(class="form-control") }}
+                                    {% if registration_form.password.errors %}
+                                        <div class="text-danger">
+                                            {% for error in registration_form.password.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="mb-3">
+                                    {{ registration_form.confirm_password.label(class="form-label") }}
+                                    {{ registration_form.confirm_password(class="form-control") }}
+                                    {% if registration_form.confirm_password.errors %}
+                                        <div class="text-danger">
+                                            {% for error in registration_form.confirm_password.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="d-grid">
+                                    {{ registration_form.submit(class="btn btn-success") }}
+                                </div>
+                            </form>
                         </div>
-                        
-                        <div class="mb-3 form-check">
-                            {{ form.remember(class="form-check-input") }}
-                            {{ form.remember.label(class="form-check-label") }}
-                        </div>
-                        
-                        <div class="d-grid">
-                            {{ form.submit(class="btn btn-primary") }}
-                        </div>
-                    </form>
-                    
-                    <div class="mt-3 text-center">
-                        <hr>
-                        <small class="text-muted">Are you an administrator?</small>
-                        <div class="mt-2">
-                            <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-outline-secondary">Admin Dashboard</a>
-                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- For Administrators -->
+            <div class="text-center mt-4">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h5>Already an administrator?</h5>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary">Go to Admin Dashboard</a>
                     </div>
                 </div>
             </div>

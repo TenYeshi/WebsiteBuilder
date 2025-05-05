@@ -3,7 +3,17 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from forms import WelcomeMessageForm, ApplicationForm, ApplicationFeedbackForm, LoginForm, ApplicationSearchForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired
+from forms import WelcomeMessageForm, ApplicationForm, ApplicationFeedbackForm, LoginForm, RegistrationForm, ApplicationSearchForm
+
+# Create an application status form with Flask-WTF
+from flask_wtf import FlaskForm
+# Create an application status form
+class ApplicationStatusForm(FlaskForm):
+    username = StringField('Application ID or Roll Number', validators=[DataRequired()])
+    password = PasswordField('Email Address', validators=[DataRequired()])
+    submit = SubmitField('Check Status')
 
 # Import our OpenAI helper functions
 from utils.openai_helper import generate_welcome_message
@@ -29,7 +39,7 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 db.init_app(app)
 
 # Import models after defining db
-from models import Project, Message, Application
+from models import Project, Message, Application, User
 
 # Create tables within application context
 with app.app_context():
@@ -225,42 +235,57 @@ def submit_application():
     
     return render_template('submit_application.html', form=form, existing_applications=existing_applications)
 
-# Application status check
+# Login page - handles both admin login and registration
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
+    login_form = LoginForm()
+    registration_form = RegistrationForm()
     
-    if form.validate_on_submit():
-        # Try to find application by ID or roll number
-        application_id_or_roll = form.username.data.strip() if form.username.data else ""
-        email = form.password.data.strip() if form.password.data else ""
+    if login_form.validate_on_submit():
+        # Check if user exists and password is correct
+        user = User.query.filter_by(username=login_form.username.data).first()
         
-        # First check if it's a numeric application ID
-        application = None
-        try:
-            if application_id_or_roll and application_id_or_roll.isdigit():
-                application = Application.query.filter_by(
-                    id=int(application_id_or_roll),
-                    email=email
-                ).first()
-            
-            # If not found by ID, try roll number
-            if not application:
-                application = Application.query.filter_by(
-                    roll_number=application_id_or_roll,
-                    email=email
-                ).first()
-                
-            if application:
-                flash('Application found! Showing details.', 'success')
-                return redirect(url_for('view_application', application_id=application.id))
-            else:
-                flash('No application found with the provided details. Please check and try again.', 'danger')
-        except Exception as e:
-            app.logger.error(f"Error checking application status: {e}")
-            flash('An error occurred while checking your application. Please try again.', 'danger')
+        if user and user.check_password(login_form.password.data):
+            # Create a session for the user (in a real app, you'd use flask-login)
+            flash('Login successful!', 'success')
+            # Send admin users to the dashboard
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid username or password', 'danger')
     
-    return render_template('login.html', form=form)
+    # Handle registration form submission
+    if registration_form.validate_on_submit():
+        # Check if username or email already exists
+        username_exists = User.query.filter_by(username=registration_form.username.data).first()
+        email_exists = User.query.filter_by(email=registration_form.email.data).first()
+        
+        if username_exists:
+            flash('Username already exists', 'danger')
+        elif email_exists:
+            flash('Email already registered', 'danger')
+        # Check if passwords match
+        elif registration_form.password.data != registration_form.confirm_password.data:
+            flash('Passwords do not match', 'danger')
+        else:
+            # Create a new user
+            new_user = User(
+                username=registration_form.username.data,
+                email=registration_form.email.data
+            )
+            new_user.set_password(registration_form.password.data)
+            
+            # First user is automatically an admin
+            if User.query.count() == 0:
+                new_user.is_admin = True
+            
+            # Save to database
+            db.session.add(new_user)
+            db.session.commit()
+            
+            flash('Account created successfully! You can now log in.', 'success')
+            return redirect(url_for('login'))
+    
+    return render_template('login.html', login_form=login_form, registration_form=registration_form)
 
 # Dashboard for application management (requires login)
 @app.route('/dashboard', methods=['GET', 'POST'])
@@ -309,6 +334,43 @@ def update_application_status(application_id):
         flash(f'Application has been {new_status}!', 'success')
     
     return redirect(url_for('dashboard'))
+
+# Check application status for applicants
+@app.route('/check-status', methods=['GET', 'POST'])
+def check_application_status():
+    form = ApplicationStatusForm()
+    
+    if form.validate_on_submit():
+        # Try to find application by ID or roll number
+        application_id_or_roll = form.username.data.strip() if form.username.data else ""
+        email = form.password.data.strip() if form.password.data else ""
+        
+        # First check if it's a numeric application ID
+        application = None
+        try:
+            if application_id_or_roll and application_id_or_roll.isdigit():
+                application = Application.query.filter_by(
+                    id=int(application_id_or_roll),
+                    email=email
+                ).first()
+            
+            # If not found by ID, try roll number
+            if not application:
+                application = Application.query.filter_by(
+                    roll_number=application_id_or_roll,
+                    email=email
+                ).first()
+                
+            if application:
+                flash('Application found! Showing details.', 'success')
+                return redirect(url_for('view_application', application_id=application.id))
+            else:
+                flash('No application found with the provided details. Please check and try again.', 'danger')
+        except Exception as e:
+            app.logger.error(f"Error checking application status: {e}")
+            flash('An error occurred while checking your application. Please try again.', 'danger')
+    
+    return render_template('check_status.html', form=form)
 
 # Error handler for 404 errors
 @app.errorhandler(404)

@@ -3,10 +3,17 @@ from wtforms import StringField, TextAreaField, PasswordField, BooleanField, Sub
 from wtforms.validators import DataRequired, Email, Length, URL, Optional
 
 class LoginForm(FlaskForm):
-    username = StringField('Application ID or Roll Number', validators=[DataRequired()])
-    password = PasswordField('Email Address', validators=[DataRequired()])
-    remember = BooleanField('Remember My Details')
-    submit = SubmitField('Check Status')
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Login')
+    
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=25)])
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), Length(min=6)])
+    submit = SubmitField('Create Account')
 
 class ContactForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=2, max=64)])
