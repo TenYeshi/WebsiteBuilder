@@ -3,6 +3,12 @@
  * Handles adding, editing, and deleting applications
  */
 
+// Check if the script is already defined to avoid conflicts
+if (typeof TenYeshiApplicationManager === 'undefined') {
+
+// Define a namespace for our application manager
+window.TenYeshiApplicationManager = {};
+
 document.addEventListener("DOMContentLoaded", () => {
   // Detect operating mode from URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -23,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmOpenBtn = document.getElementById("confirmOpenBtn");
   const cancelSaveBtn = document.getElementById("cancelSaveBtn");
   const cancelOpenBtn = document.getElementById("cancelOpenBtn");
+  const dialogBackground = document.getElementById("dialogBackground");
   
   // Application form fields
   const applicantName = document.getElementById("applicantName");
@@ -100,6 +107,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   // Load application by ID
+  // Function to update word count
+  function updateWordCount() {
+    const wordCountElement = document.getElementById("wordCount");
+    const charCountElement = document.getElementById("charCount");
+    
+    if (wordCountElement && charCountElement && editor) {
+      const text = editor.innerText || "";
+      const words = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+      const chars = text.length;
+      
+      wordCountElement.textContent = `Words: ${words}`;
+      charCountElement.textContent = `Characters: ${chars}`;
+    }
+  }
+  
   async function loadApplication(id) {
     try {
       const response = await fetch(`/api/applications/${id}`);
@@ -367,18 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   
-  // Function to update word count
-  function updateWordCount() {
-    const text = editor.innerText || "";
-    const words = text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
-    const chars = text.length;
-    
-    const wordCountElement = document.getElementById("wordCount");
-    const charCountElement = document.getElementById("charCount");
-    
-    wordCountElement.textContent = `Words: ${words}`;
-    charCountElement.textContent = `Characters: ${chars}`;
-  }
+  // This function is already defined above
   
   // Function to show notification
   function showNotification(message, type = "default") {
@@ -404,3 +415,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize the page based on the mode
   initPageByMode();
 });
+
+// Close namespace check
+}
