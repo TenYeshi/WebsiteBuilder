@@ -813,6 +813,11 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // Detect operating mode from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const mode = urlParams.get('mode') || 'add';
+      const applicationId = urlParams.get('id');
+      
       // DOM Elements
       const editor = document.getElementById("editor");
       const fontFamilySelect = document.getElementById("fontFamilySelect");
