@@ -56,6 +56,18 @@ class Application(db.Model):
     feedback = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    document_id = db.Column(db.Integer, db.ForeignKey('document.id'), nullable=True)
 
     def __repr__(self):
         return f'<Application {self.id} by {self.applicant_name} - {self.status}>'
+
+class Document(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    applications = db.relationship('Application', backref='document', lazy=True)
+    
+    def __repr__(self):
+        return f'<Document {self.id}: {self.title}>'

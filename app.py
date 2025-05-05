@@ -38,7 +38,7 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 db.init_app(app)
 
 # Import models after defining db
-from models import Project, Message, Application, User
+from models import Project, Message, Application, User, Document
 
 # Create tables within application context
 with app.app_context():
@@ -113,7 +113,24 @@ def contact():
 # Word Processor Application
 @app.route('/word-processor')
 def word_processor():
-    return render_template('word_processor/index.html')
+    """Word processor for creating new applications"""
+    mode = request.args.get('mode', 'add')
+    application_id = request.args.get('id')
+    
+    # If in edit mode and application_id provided, get the application
+    application = None
+    if mode == 'edit' and application_id:
+        application = Application.query.get_or_404(application_id)
+    
+    # Get all applications for the delete mode
+    applications = []
+    if mode == 'delete':
+        applications = Application.query.order_by(Application.created_at.desc()).all()
+    
+    return render_template('word_processor/index.html', 
+                           mode=mode, 
+                           application=application,
+                           applications=applications)
 
 # Application submission routes
 @app.route('/submit-application', methods=['GET', 'POST'])
@@ -318,6 +335,184 @@ def check_application_status():
             flash('An error occurred while checking your application. Please try again.', 'danger')
     
     return render_template('check_status.html', form=form)
+
+# API endpoints for document management in word processor
+@app.route('/api/documents', methods=['GET'])
+def get_documents():
+    """Get all documents or applications based on mode"""
+    mode = request.args.get('mode', 'add')
+    
+    if mode == 'edit' or mode == 'delete':
+        # Return list of applications
+        applications = Application.query.order_by(Application.created_at.desc()).all()
+        return jsonify({
+            'success': True,
+            'documents': [{
+                'id': app.id,
+                'title': f"Application #{app.id} - {app.applicant_name}",
+                'date': app.created_at.strftime('%Y-%m-%d %H:%M'),
+                'type': 'application'
+            } for app in applications]
+        })
+    else:
+        # Return list of document templates or regular documents
+        documents = Document.query.order_by(Document.created_at.desc()).all()
+        return jsonify({
+            'success': True,
+            'documents': [{
+                'id': doc.id,
+                'title': doc.title,
+                'date': doc.created_at.strftime('%Y-%m-%d %H:%M'),
+                'type': 'document'
+            } for doc in documents]
+        })
+
+@app.route('/api/documents/<int:document_id>', methods=['GET'])
+def get_document(document_id):
+    """Get a specific document by ID"""
+    document = Document.query.get_or_404(document_id)
+    return jsonify({
+        'success': True,
+        'document': {
+            'id': document.id,
+            'title': document.title,
+            'content': document.content,
+            'created_at': document.created_at.strftime('%Y-%m-%d %H:%M'),
+            'updated_at': document.updated_at.strftime('%Y-%m-%d %H:%M')
+        }
+    })
+
+@app.route('/api/applications/<int:application_id>', methods=['GET'])
+def get_application_document(application_id):
+    """Get a specific application by ID"""
+    application = Application.query.get_or_404(application_id)
+    return jsonify({
+        'success': True,
+        'document': {
+            'id': application.id,
+            'title': f"Application #{application.id} - {application.applicant_name}",
+            'content': application.content,
+            'created_at': application.created_at.strftime('%Y-%m-%d %H:%M'),
+            'updated_at': application.updated_at.strftime('%Y-%m-%d %H:%M'),
+            'applicant_name': application.applicant_name,
+            'email': application.email,
+            'father_name': application.father_name,
+            'roll_number': application.roll_number,
+            'class_name': application.class_name,
+            'date_of_birth': application.date_of_birth,
+            'address': application.address,
+            'phone_number': application.phone_number,
+            'status': application.status
+        }
+    })
+
+@app.route('/api/documents', methods=['POST'])
+def save_document():
+    """Save a new document or update an existing one"""
+    data = request.json
+    
+    mode = data.get('mode', 'add')
+    title = data.get('title', 'Untitled Document')
+    content = data.get('content', '')
+    document_id = data.get('id')
+    
+    if mode == 'add':
+        # Create a new application from the document
+        new_application = Application(
+            applicant_name=data.get('applicant_name', 'Unknown'),
+            email=data.get('email', 'unknown@example.com'),
+            father_name=data.get('father_name', ''),
+            roll_number=data.get('roll_number', ''),
+            class_name=data.get('class_name', ''),
+            date_of_birth=data.get('date_of_birth', ''),
+            address=data.get('address', ''),
+            phone_number=data.get('phone_number', ''),
+            content=content,
+            status='pending'
+        )
+        
+        # Create a document and link it to the application
+        new_document = Document(
+            title=title,
+            content=content
+        )
+        
+        db.session.add(new_document)
+        db.session.flush()  # Flush to get the document ID
+        
+        new_application.document_id = new_document.id
+        db.session.add(new_application)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Document and application saved successfully',
+            'document_id': new_document.id,
+            'application_id': new_application.id
+        })
+        
+    elif mode == 'edit' and document_id:
+        # Update existing application
+        application = Application.query.get_or_404(document_id)
+        
+        # Update application fields
+        application.applicant_name = data.get('applicant_name', application.applicant_name)
+        application.email = data.get('email', application.email)
+        application.father_name = data.get('father_name', application.father_name)
+        application.roll_number = data.get('roll_number', application.roll_number)
+        application.class_name = data.get('class_name', application.class_name)
+        application.date_of_birth = data.get('date_of_birth', application.date_of_birth)
+        application.address = data.get('address', application.address)
+        application.phone_number = data.get('phone_number', application.phone_number)
+        application.content = content
+        
+        # Update document if it exists
+        if application.document_id:
+            document = Document.query.get(application.document_id)
+            if document:
+                document.title = title
+                document.content = content
+        else:
+            # Create a new document if none exists
+            new_document = Document(
+                title=title,
+                content=content
+            )
+            db.session.add(new_document)
+            db.session.flush()
+            application.document_id = new_document.id
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Application updated successfully',
+            'application_id': application.id
+        })
+    
+    return jsonify({
+        'success': False,
+        'message': 'Invalid request'
+    }), 400
+
+@app.route('/api/applications/<int:application_id>', methods=['DELETE'])
+def delete_application(application_id):
+    """Delete an application and its associated document"""
+    application = Application.query.get_or_404(application_id)
+    
+    # Delete associated document if it exists
+    if application.document_id:
+        document = Document.query.get(application.document_id)
+        if document:
+            db.session.delete(document)
+    
+    db.session.delete(application)
+    db.session.commit()
+    
+    return jsonify({
+        'success': True,
+        'message': 'Application deleted successfully'
+    })
 
 # Error handler for 404 errors
 @app.errorhandler(404)
